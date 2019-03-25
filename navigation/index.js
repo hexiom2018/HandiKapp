@@ -9,8 +9,6 @@ const StackNavigator = createStackNavigator({
     LogIn:{
         screen:LogIn
     },
-    
-
 },{
     navigationOptions:{
         drawerLockMode:'locked-closed'
