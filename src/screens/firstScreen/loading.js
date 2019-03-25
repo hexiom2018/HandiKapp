@@ -1,5 +1,5 @@
 import React from 'react';
-import { View,  ImageBackground } from 'react-native';
+import { View, ImageBackground } from 'react-native';
 import { connect } from 'react-redux'
 import firebase from 'firebase'
 import Splashh from '../../../assets/Splashh.jpg'
@@ -42,7 +42,9 @@ class FirstScreen extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <ImageBackground source={Splashh} style={{ width: '100%', height: '100%' }}>
+                <ImageBackground
+                    source={Splashh}
+                    style={{ width: '100%', height: '100%' }}>
                 </ImageBackground>
             </View>
         );

@@ -2,20 +2,21 @@ import { createStackNavigator, createAppContainer, createDrawerNavigator } from 
 import Drawer from '../src/components/drawer/Drawer'
 import FirstScreen from '../src/screens/firstScreen/loading'
 import LogIn from '../src/screens/login/login'
+
 const StackNavigator = createStackNavigator({
+
     FirstScreen: {
         screen: FirstScreen
     },
-    LogIn:{
-        screen:LogIn
-    },
-},{
-    navigationOptions:{
-        drawerLockMode:'locked-closed'
+    LogIn: {
+        screen: LogIn
     }
-
-}
-);
+},
+    {
+        navigationOptions: {
+            drawerLockMode: 'locked-closed'
+        }
+    });
 
 const DrawerNavigation = createDrawerNavigator(
     {
@@ -29,10 +30,6 @@ const DrawerNavigation = createDrawerNavigator(
         contentComponent: Drawer
     }
 )
-
-
-
-
 
 const Navigation = createAppContainer(DrawerNavigation)
 export default Navigation;
