@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, ImageBackground } from 'react-native';
-import { connect } from 'react-redux'
-import firebase from 'firebase'
-import Splashh from '../../../assets/Splashh.jpg'
+import { connect } from 'react-redux';
+import firebase from 'firebase';
+import Splashh from '../../../assets/Splashh.jpg';
 import { StackActions, NavigationActions } from 'react-navigation';
-
+import { current_User } from '../../Store/actions/authAction';
 class FirstScreen extends React.Component {
     constructor(props) {
         super(props)
@@ -13,30 +13,30 @@ class FirstScreen extends React.Component {
     }
 
     componentDidMount() {
-        this.checkUser();
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user != null) {
+                // console.log(user, '======');
+                const currentUser = user
+                // this.props.user(currentUser)
+                const resetAction = StackActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({ routeName: 'Parking' }),
+                    ]
+                })
+                this.props.navigation.dispatch(resetAction)
+            } else {
+                const resetAction = StackActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({ routeName: 'LogIn' }),
+                    ]
+                })
+                this.props.navigation.dispatch(resetAction)
+            }
+        })
     }
 
-    checkUser = () => {
-        const { currentUser } = this.props
-        if (currentUser === null) {
-            const resetAction = StackActions.reset({
-                index: 0,
-                actions: [
-                    NavigationActions.navigate({ routeName: 'LogIn' }),
-                ]
-            })
-            this.props.navigation.dispatch(resetAction)
-        }
-        else {
-            const resetAction = StackActions.reset({
-                index: 0,
-                actions: [
-                    NavigationActions.navigate({ routeName: 'Dashboard' }),
-                ]
-            })
-            this.props.navigation.dispatch(resetAction)
-        }
-    }
     static navigationOptions = { header: null }
 
     render() {
@@ -52,13 +52,15 @@ class FirstScreen extends React.Component {
 }
 function mapStateToProps(states) {
     return ({
-        currentUser: states.authReducers.USER,
+
     })
 }
 
 function mapDispatchToProps(dispatch) {
     return ({
-
+        user: (currentUser) => {
+            dispatch(current_User(currentUser))
+        },
     })
 }
 

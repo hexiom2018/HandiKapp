@@ -1,17 +1,10 @@
 import React from 'react';
 import { View, ImageBackground, Text, TextInput, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
-import firebase from '../../config/Firebase';
 import { StackActions, NavigationActions } from 'react-navigation';
-import * as Expo from 'expo';
-import { Header } from 'react-native-elements';
-import { SocialIcon } from 'react-native-elements'
-import { Constants } from 'expo';
 import Splashh from '../../../assets/Splashh.jpg'
-
-// import { current_User } from '../../Store/actions/authAction'
 import { connect } from 'react-redux';
-require("firebase/firestore")
-const db = firebase.firestore()
+import { Action } from '../../Store/actions/authAction'
+
 class LogIn extends React.Component {
     constructor(props) {
         super(props);
@@ -21,42 +14,22 @@ class LogIn extends React.Component {
         };
     }
 
-    componentDidMount() {
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user != null) {
-                const currentUser = user
-                this.props.user(currentUser)
-            }
-        })
+    logIn() {
+        const { Email, Password } = this.state
+        this.props.AuthUser(Email, Password)
     }
-
-    static navigationOptions = {
-        title: 'Home Solution ',
-        headerStyle: {
-            backgroundColor: '#075e54',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold',
-        },
-    };
 
     static navigationOptions = { header: null }
     render() {
         const { Email, Password } = this.state
-
-
         return (
-
             <ImageBackground source={Splashh} style={{ width: '100%', height: '100%' }}>
                 <View style={{ flex: 1 }}>
                     <StatusBar hidden={true} />
-                    <View style={styles.Heading}><Text style={styles.headingText}>LogIn</Text></View>
-
+                    <View style={styles.Heading}><Text style={styles.headingText} onPress={() => this.logIn()}>LogIn</Text></View>
                     <View>
                         <View>
                             <View style={{ padding: 2 }}>
-
                                 <Text style={{ color: 'black', fontSize: 20 }}>Enter Your Email</Text>
                             </View>
                             <View style={{ padding: 2 }}>
@@ -68,12 +41,10 @@ class LogIn extends React.Component {
                                     placeholder="email here"
                                     onChangeText={(Email) => this.setState({ Email })}
                                 />
-
                             </View>
                         </View>
                         <View>
                             <View style={{ padding: 2 }}>
-
                                 <Text style={{ color: 'black', fontSize: 20 }}>Password:</Text>
                             </View>
                             <View style={{ padding: 2 }}>
@@ -87,8 +58,6 @@ class LogIn extends React.Component {
                                 />
                             </View>
                         </View>
-
-
                     </View>
                 </View>
             </ImageBackground>
@@ -127,8 +96,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         width: 220,
         // justifyContent: 'space-between',
-
-
     },
     google: {
         alignItems: 'center',
@@ -137,8 +104,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         width: 220,
         // justifyContent: 'space-between',
-
-
     },
     ButtonText: {
         fontWeight: 'bold',
@@ -146,27 +111,17 @@ const styles = StyleSheet.create({
         // alignItems:'center'
         fontSize: 20
     },
-
-
 });
 function mapStateToProps(states) {
     return ({
-        profilePic: states.authReducers.PROFILEPIC,
-        profileName: states.authReducers.PROFILENAME,
-        currentUser: states.authReducers.USER,
-        allUser: states.authReducers.ALLUSER
     })
 }
 
 function mapDispatchToProps(dispatch) {
     return ({
-        user: (currentUser) => {
-            dispatch(current_User(currentUser))
+        AuthUser: (Email, Password) => {
+            dispatch(Action(Email, Password));
         },
-        login: (userData) => {
-            dispatch(login(userData))
-        }
-
     })
 }
 

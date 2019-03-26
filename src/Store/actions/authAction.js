@@ -1,7 +1,22 @@
 import actionTypes from '../Constant/Constant'
-import firebase from '../../Config/firebase/index'
+import firebase from '../../config/Firebase'
 require('firebase/firestore')
 var db = firebase.firestore()
+
+
+export function Action(Email, Password) {
+    return dispatch => {
+        firebase.auth().signInWithEmailAndPassword(Email, Password)
+            .then((success) => {
+                console.log(success);
+                
+            })
+            .catch((error) => {
+                alert('Invalid Email & Password')
+                console.log('something went wrong', error)
+            })
+    }
+}
 
 
 // export function current_User(currentUser) {

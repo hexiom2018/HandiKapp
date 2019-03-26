@@ -2,6 +2,7 @@ import { createStackNavigator, createAppContainer, createDrawerNavigator } from 
 import Drawer from '../src/components/drawer/Drawer'
 import FirstScreen from '../src/screens/firstScreen/loading'
 import LogIn from '../src/screens/login/login'
+import Parking from '../src/screens/parking/Parking';
 
 const StackNavigator = createStackNavigator({
 
@@ -10,6 +11,9 @@ const StackNavigator = createStackNavigator({
     },
     LogIn: {
         screen: LogIn
+    },
+    Parking: {
+        screen: Parking
     }
 },
     {

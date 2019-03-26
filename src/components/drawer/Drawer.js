@@ -36,7 +36,7 @@ class DrawerContent extends Component {
     }
 
     componentWillReceiveProps(props) {
-       
+
     }
 
     addServices() {
@@ -61,7 +61,6 @@ class DrawerContent extends Component {
 
     notification() {
         this.props.navigation.navigate('notification')
-
     }
 
     MyProfile() {
@@ -127,11 +126,11 @@ class DrawerContent extends Component {
                             </View>
                         </View>
                     </TouchableOpacity>
-                   
+
                     <View style={{ borderWidth: 1, borderColor: 'lightgrey' }}>
 
                     </View>
-                    
+
                     <TouchableOpacity onPress={() => this.messages()}>
                         <View style={styles.RouteName}>
                             <View style={{ alignSelf: 'center', marginRight: 10 }}>
@@ -226,13 +225,13 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return ({
-    
+
     })
 }
 
 function mapDispatchToProps(dispatch) {
     return ({
-      
+
     })
 }
 
