@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, TextInput, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { Marker } from 'react-native-maps';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Constants, Location, Permissions, Expo } from 'expo';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import imgHandi from '../../../assets/splash-screen/handi.png'
+import imgHandi from '../../../assets/splash-screen/handi.png';
 // import MapViewDirections from 'react-native-maps-directions';  // ye install krna hai
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -100,7 +100,7 @@ class Map extends React.Component {
                         />  */}
 
                         </MapView >
-                        <View style={{ alignItems: 'center', marginTop: 16, position: 'absolute' }}>
+                        <View style={{ alignItems: 'center', marginTop: 14, position: 'absolute' }}>
                             <View style={styles.container}>
                                 <Icon name='search' size={20} color='#0291d3' style={styles.searchIcon} />
                                 <TextInput
@@ -115,16 +115,13 @@ class Map extends React.Component {
                                 style={styles.view}
                             // key={index}
                             // onPress={() => this.views(users = item.data)}
-                            // onLongPress={() => this.alarm(circleMembers = item.data)}
                             >
-                                <View>
-                                    <Text style={{ borderRadius: 8, backgroundColor: '#3498db', borderColor: '#3498db', borderWidth: 2, overflow: 'hidden' }}>
-                                        <Icon name='group' size={30} color='white' />
-                                    </Text>
-                                </View>
-                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 16, fontWeight: "700", paddingLeft: 8 }} >Talha</Text>
-                                    <Text style={{ paddingRight: 8 }} ><Icon name='arrow-right' size={30} color='gray' /></Text>
+                                <View style={styles.searchListItem}>
+                                    <View>
+                                        <Text style={{ fontSize: 18, paddingLeft: 8, color: 'rgba(13, 13, 13 , 0.8)' }} >Talha</Text>
+                                        <Text style={{ fontSize: 10, paddingLeft: 8, color: '#0291d3' }} >karachi</Text>
+                                    </View>
+                                    <Text style={{ paddingRight: 8 }} ><Icon name='chevron-right' size={18} color='#0291d3' /></Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -137,8 +134,8 @@ class Map extends React.Component {
             </View>
         );
     }
-
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -168,10 +165,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: 'white',
+        borderTopWidth: 1,
+        borderColor: 'gray',
         width: '95%',
     },
+    searchListItem: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    }
 
 });
 
