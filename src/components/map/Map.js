@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, TextInput, Text, Image, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
+import { View, TextInput, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { connect } from 'react-redux'
 import { Marker } from 'react-native-maps';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Constants, Location, Permissions, Expo } from 'expo';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import imgHandi from '../../../assets/splash-screen/handi.png'
 // import MapViewDirections from 'react-native-maps-directions';  // ye install krna hai
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -31,7 +32,6 @@ class Map extends React.Component {
         } else {
             this._getLocationAsync();
         }
-
     }
 
     _getLocationAsync = async () => {
@@ -67,19 +67,40 @@ class Map extends React.Component {
         return (
             <View style={{ flex: 1 }}>
                 {get ?
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        < MapView
+                            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                            style={styles.map}
+                            region={{
+                                latitude: currentLocation.lat,
+                                longitude: currentLocation.lng,
+                                latitudeDelta: LATITUDE_DELTA,
+                                longitudeDelta: LONGITUDE_DELTA,
+                            }}
+                        >
 
-                    < MapView
-                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                        style={styles.map}
-                        region={{
-                            latitude: currentLocation.lat,
-                            longitude: currentLocation.lng,
-                            latitudeDelta: LATITUDE_DELTA,
-                            longitudeDelta: LONGITUDE_DELTA,
-                        }}
-                    >
+                            <MapView.Marker
+                                coordinate={{
+                                    latitude: currentLocation.lat,
+                                    longitude: currentLocation.lng,
+                                }}
+                            >
+                                <Image
+                                    source={imgHandi}
+                                    style={{ width: 55, height: 78 }}
+                                />
+                            </MapView.Marker>
 
-                        <View style={{ alignItems: 'center', marginTop: 16 }}>
+                            {/* <MapViewDirections
+                            origin={coordinates[0]}
+                            destination={coordinates[coordinates.length - 1]}
+                            apikey={GOOGLE_MAPS_APIKEY}
+                            strokeWidth={3}
+                            strokeColor="hotpink"
+                        />  */}
+
+                        </MapView >
+                        <View style={{ alignItems: 'center', marginTop: 16, position: 'absolute' }}>
                             <View style={styles.container}>
                                 <Icon name='search' size={20} color='#0291d3' style={styles.searchIcon} />
                                 <TextInput
@@ -90,44 +111,27 @@ class Map extends React.Component {
                                     onChangeText={(search) => this.setState({ search })}
                                 />
                             </View>
+                            <TouchableOpacity
+                                style={styles.view}
+                            // key={index}
+                            // onPress={() => this.views(users = item.data)}
+                            // onLongPress={() => this.alarm(circleMembers = item.data)}
+                            >
+                                <View>
+                                    <Text style={{ borderRadius: 8, backgroundColor: '#3498db', borderColor: '#3498db', borderWidth: 2, overflow: 'hidden' }}>
+                                        <Icon name='group' size={30} color='white' />
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Text style={{ fontSize: 16, fontWeight: "700", paddingLeft: 8 }} >Talha</Text>
+                                    <Text style={{ paddingRight: 8 }} ><Icon name='arrow-right' size={30} color='gray' /></Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
-
-
-                        <MapView.Marker
-                            coordinate={{
-                                latitude: currentLocation.lat,
-                                longitude: currentLocation.lng,
-                            }}
-                        />
-
-                        {/* <MapView.Marker
-                            coordinate={{
-                                latitude: userLocation.lat,
-                                longitude: userLocation.lng,
-                            }}
-                        /> */}
-
-                        {/* <MapViewDirections
-                            origin={coordinates[0]}
-                            destination={coordinates[coordinates.length - 1]}
-                            apikey={GOOGLE_MAPS_APIKEY}
-                            strokeWidth={3}
-                            strokeColor="hotpink"
-                        />  */}
-
-                    </MapView >
+                    </View>
                     :
                     <View style={{ flex: 1, backgroundColor: '#f2f6f9', alignItems: 'center' }}>
-                        {/* <View style={styles.container}>
-                            <Icon name='search' size={20} color='#0291d3' style={styles.searchIcon} />
-                            <TextInput
-                                value={search}
-                                placeholderTextColor='rgba(13, 13, 13 , 0.7)'
-                                style={styles.input}
-                                placeholder="Søg efter destination..."
-                                onChangeText={(search) => this.setState({ search })}
-                            />
-                        </View> */}
+                        <Text>Waiting . . .</Text>
                     </View>
                 }
             </View>
@@ -137,14 +141,11 @@ class Map extends React.Component {
 }
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
-
-        alignItems: 'center',
-        justifyContent: 'center',
+        flex: 1,
         flexDirection: 'row',
         backgroundColor: 'white',
         borderRadius: 4,
-        width: '90%'
+        width: '95%'
     },
     map: {
         ...StyleSheet.absoluteFillObject,
@@ -152,14 +153,25 @@ const styles = StyleSheet.create({
     input: {
         color: 'black',
         height: 70,
-        width: '82%',
+        width: '84%',
         fontSize: 18
     },
     searchIcon: {
         paddingHorizontal: 18,
         height: 70,
         paddingTop: 22
-    }
+    },
+    view: {
+        paddingLeft: 6,
+        paddingTop: 15,
+        paddingBottom: 15,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: 'white',
+        width: '95%',
+    },
 
 });
 
