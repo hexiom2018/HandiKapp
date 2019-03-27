@@ -17,10 +17,9 @@ class Parking extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <AppHeader />
+            <AppHeader>
                 <Map />
-            </View>
+            </AppHeader>
         )
     }
 }
