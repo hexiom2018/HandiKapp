@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation';
 import { Header } from 'react-native-elements';
+import { View, Text, TextInput, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+
 
 
 export default class AppHeader extends React.Component {
@@ -16,15 +17,25 @@ export default class AppHeader extends React.Component {
     }
 
     render() {
+        const { children } = this.props
         return (
-                <Header
-                    containerStyle={styles.header}
-                    placement='center'
-                    // rightComponent={{ text: 'LogOut', color: '#fff', onPress: () => this.LogOut() }}
-                    centerComponent={{ text: 'Parkering', style: { color: '#fff' } }}
-                    leftComponent={{ icon: 'menu', color: '#fff', onPress: () => this.menu() }}
+            <View style={{ flex: 1 }}>
+                <View>
+                    <Header
+                        containerStyle={styles.header}
+                        placement='center'
+                        // rightComponent={{ text: 'LogOut', color: '#fff', onPress: () => this.LogOut() }}
+                        centerComponent={{ text: 'Parkering', style: { color: '#fff' } }}
+                        leftComponent={{ icon: 'menu', color: '#fff', onPress: () => this.menu() }}
 
-                />
+                    />
+                </View>
+                <View>
+                    {
+                        children
+                    }
+                </View>
+            </View>
         )
     }
 }
