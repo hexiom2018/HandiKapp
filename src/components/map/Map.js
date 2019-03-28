@@ -63,6 +63,8 @@ class Map extends React.Component {
                 longitude: userLocation.lng,
             },
         ]
+
+        const arr = [{ name: 'talha' }, { name: 'nabeel' }, { name: 'uzair' }]
         // const GOOGLE_MAPS_APIKEY = ''
         return (
             <View style={{ flex: 1 }}>
@@ -111,20 +113,42 @@ class Map extends React.Component {
                                     onChangeText={(search) => this.setState({ search })}
                                 />
                             </View>
-                            <TouchableOpacity
-                                style={styles.view}
-                            // key={index}
-                            // onPress={() => this.views(users = item.data)}
-                            >
-                                <View style={styles.searchListItem}>
-                                    <View>
-                                        <Text style={{ fontSize: 18, paddingLeft: 8, color: 'rgba(13, 13, 13 , 0.8)' }} >Talha</Text>
-                                        <Text style={{ fontSize: 10, paddingLeft: 8, color: '#0291d3' }} >karachi</Text>
-                                    </View>
-                                    <Text style={{ paddingRight: 8 }} ><Icon name='chevron-right' size={18} color='#0291d3' /></Text>
-                                </View>
-                            </TouchableOpacity>
+                            {arr &&
+                                arr.map((item, index) => {
+                                    return (
+                                        <View key={index} style={styles.view}>
+                                            <View style={styles.border}></View>
+                                            <TouchableOpacity
+                                                style={{ paddingTop: 15, paddingBottom: 15, }}
+                                            // onPress={() => this.views(users = item.data)}
+                                            >
+                                                <View style={styles.searchListItem}>
+                                                    <View>
+                                                        <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)' }} >{item.name}</Text>
+                                                        <Text style={{ fontSize: 10, color: '#0291d3' }} >karachi</Text>
+                                                    </View>
+                                                    <Text style={{ paddingRight: 8 }} ><Icon name='chevron-right' size={18} color='#0291d3' /></Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
+                                })
+                            }
                         </View>
+                        {arr &&
+                            <View style={{ alignItems: 'center', bottom: 26, position: 'absolute' }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', borderRadius: 4, width: '100%' }}>
+                                    <Text style={{ color: 'black', paddingLeft: 16, }}>Talha</Text>
+                                    <Text>Talha</Text>
+                                    <Text>Talha</Text>
+                                    <TouchableOpacity
+                                        style={{ width: 250, backgroundColor: 'blue', alignItems: 'center', marginBottom: 20, marginHorizontal: 30, paddingVertical: 16, borderRadius: 6 }}
+                                    >
+                                        <Text style={{ fontSize: 20, fontWeight: '500' , color:'white'}} > <Icon name='location-arrow' size={24} color='white' />{'  Naviger til plads'}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        }
                     </View>
                     :
                     <View style={{ flex: 1, backgroundColor: '#f2f6f9', alignItems: 'center' }}>
@@ -159,14 +183,14 @@ const styles = StyleSheet.create({
         paddingTop: 22
     },
     view: {
-        paddingLeft: 6,
-        paddingTop: 15,
-        paddingBottom: 15,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
+        flex: 1,
+        width: '95%',
         backgroundColor: 'white',
+        paddingLeft: 16,
+    },
+    border: {
+        borderColor: '#e6e6e6',
         borderTopWidth: 1,
-        borderColor: 'gray',
         width: '95%',
     },
     searchListItem: {
@@ -174,7 +198,23 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
-    }
+    },
+    btnDirection: {
+        overflow: 'hidden',
+        marginTop: 5,
+        marginBottom: 5,
+        // marginRight:30,
+        borderWidth: 1,
+        paddingHorizontal: 30,
+        paddingVertical: 12,
+        borderRadius: 6,
+        borderColor: '#ffffff',
+        backgroundColor: '#3498db',
+        fontSize: 14,
+        fontWeight: '700',
+        // textDecorationLine: 'underline',
+        color: '#ffffff',
+    },
 
 });
 
