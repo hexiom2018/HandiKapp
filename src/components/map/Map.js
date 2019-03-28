@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { Marker } from 'react-native-maps';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Constants, Location, Permissions, Expo } from 'expo';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import imgHandi from '../../../assets/splash-screen/handi.png';
+import navigationIcon from '../../../assets/navigationIcon.png'
 // import MapViewDirections from 'react-native-maps-directions';  // ye install krna hai
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -21,6 +22,7 @@ class Map extends React.Component {
             get: false,
             sellerLocation: false,
             search: '',
+            selectPlace: false
         }
     }
 
@@ -49,10 +51,13 @@ class Map extends React.Component {
             get: true,
         });
     };
+    select(item) {
+        this.setState({ item, selectPlace: true })
+    }
 
 
     render() {
-        const { currentLocation, get, errorMessage, userLocation, search } = this.state
+        const { currentLocation, get, selectPlace, userLocation, search , item } = this.state
         const coordinates = [
             {
                 latitude: currentLocation.lat,
@@ -104,7 +109,7 @@ class Map extends React.Component {
                         </MapView >
                         <View style={{ alignItems: 'center', marginTop: 14, position: 'absolute' }}>
                             <View style={styles.container}>
-                                <Icon name='search' size={20} color='#0291d3' style={styles.searchIcon} />
+                                <Icon name='search' size={30} color='#0291d3' style={styles.searchIcon} />
                                 <TextInput
                                     value={search}
                                     placeholderTextColor='rgba(13, 13, 13 , 0.7)'
@@ -120,14 +125,14 @@ class Map extends React.Component {
                                             <View style={styles.border}></View>
                                             <TouchableOpacity
                                                 style={{ paddingTop: 15, paddingBottom: 15, }}
-                                            // onPress={() => this.views(users = item.data)}
+                                                onPress={() => this.select(item)}
                                             >
                                                 <View style={styles.searchListItem}>
                                                     <View>
                                                         <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)' }} >{item.name}</Text>
                                                         <Text style={{ fontSize: 10, color: '#0291d3' }} >karachi</Text>
                                                     </View>
-                                                    <Text style={{ paddingRight: 8 }} ><Icon name='chevron-right' size={18} color='#0291d3' /></Text>
+                                                    <Text style={{ paddingRight: 8 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </View>
@@ -135,16 +140,31 @@ class Map extends React.Component {
                                 })
                             }
                         </View>
-                        {arr &&
+                        {selectPlace &&
                             <View style={{ alignItems: 'center', bottom: 26, position: 'absolute' }}>
                                 <View style={{ flex: 1, backgroundColor: 'white', borderRadius: 4, width: '100%' }}>
-                                    <Text style={{ color: 'black', paddingLeft: 16, }}>Talha</Text>
-                                    <Text>Talha</Text>
-                                    <Text>Talha</Text>
+                                    <View style={{ flex: 1, alignItems: 'flex-end', marginTop: 4, marginRight: 4 }}>
+                                        <Text onPress={() => this.setState({ selectPlace: false })}><Icon name='close' size={30} color='gray' /></Text>
+                                    </View>
+                                    <View style={{ marginBottom: 14, marginLeft: 20 }}>
+                                        <Text style={{ color: 'black', paddingLeft: 16, fontSize: 15, }}>{item.name}</Text>
+                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 16, }}>pakistan</Text>
+                                        <Text style={{ color: 'gray', paddingLeft: 16, fontSize: 12, }}>Talha</Text>
+                                    </View>
                                     <TouchableOpacity
-                                        style={{ width: 250, backgroundColor: 'blue', alignItems: 'center', marginBottom: 20, marginHorizontal: 30, paddingVertical: 16, borderRadius: 6 }}
+                                        style={{ flex: 1, width: 280, backgroundColor: '#6819e7', alignItems: 'center', marginBottom: 20, marginHorizontal: 30, paddingVertical: 12, borderRadius: 6, flexDirection: 'row', }}
                                     >
-                                        <Text style={{ fontSize: 20, fontWeight: '500' , color:'white'}} > <Icon name='location-arrow' size={24} color='white' />{'  Naviger til plads'}</Text>
+                                        <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
+                                            <View >
+                                                <Image
+                                                    source={navigationIcon}
+                                                    style={{ width: 30, height: 30 }}
+                                                />
+                                            </View>
+                                            <View >
+                                                <Text style={{ fontSize: 20, fontWeight: '500', color: 'white' }} > {'  Naviger til plads'}</Text>
+                                            </View>
+                                        </View>
                                     </TouchableOpacity>
                                 </View>
                             </View>
