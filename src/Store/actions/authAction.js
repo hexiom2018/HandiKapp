@@ -1,58 +1,53 @@
 import actionTypes from '../Constant/Constant'
 import firebase from '../../config/Firebase'
-require('firebase/firestore')
-var db = firebase.firestore()
+
+var db = firebase.database()
+
 
 
 export function Action(Email, Password) {
     return dispatch => {
-        firebase.auth().signInWithEmailAndPassword(Email, Password)
-            .then((success) => {
-                console.log(success);
-                
-            })
-            .catch((error) => {
-                alert('Invalid Email & Password')
-                console.log('something went wrong', error)
-            })
+        // firebase.auth().signInWithEmailAndPassword(Email, Password)
+        //     .then((success) => {
+        //         console.log(success);
+
+        //     })
+        //     .catch((error) => {
+        //         alert('Invalid Email & Password')
+        //         console.log('something went wrong', error)
+        //     })
+        // firebase.database().ref('/').on('child_added', (snapShot) => {
+        //     console.log(snapShot.val(), 'the admin data here')
+        // })
     }
 }
 
 
-// export function current_User(currentUser) {
-//     return dispatch => {
-//         const UID = currentUser.uid
-//         var arr = [];
-//         dispatch(
-//             { type: actionTypes.UID, payload: UID }
-//         )
+export function UserSignUp(obj) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            const email = obj.email
+            const password = obj.password
+            firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
+                let data = {
+                    email,
+                    mobile: obj.number,
+                    userUid: user.user.uid
+                }
+                let vehicle = {
+                    reg: obj.register,
+                    type: obj.radio,
+                    disabled: obj.disabledPark
+                }
+                db.ref('/user').push(data)
+                db.ref('/vehicle').push(vehicle)
+                resolve()
+            })
+                .catch((err) => {
+                    console.log(err)
+                    reject()
+                })
+        })
+    }
+}
 
-//         db.collection('UserData').where('UID', '==', UID).onSnapshot((querySnapshot) => {
-//             querySnapshot.docChanges().forEach((docs) => {
-//                 if (docs.type === 'added') {
-//                     dispatch(
-//                         { type: actionTypes.USER, payload: docs.doc.data() }
-//                     )
-//                 }
-//                 if (docs.type === 'modified') {
-//                     dispatch(
-//                         { type: actionTypes.USER, payload: docs.doc.data() }
-//                     )
-//                 }
-//             })
-//         })
-
-//         db.collection('UserData').onSnapshot((querySnapshot) => {
-//             querySnapshot.docChanges().forEach((docs) => {
-//                 if (docs.type === 'added') {
-//                     if (docs.doc.data().UID !== UID) {
-//                         arr.push(docs.doc.data())
-//                         dispatch(
-//                             { type: actionTypes.ALLUSER, payload: arr }
-//                         )
-//                     }
-//                 }
-//             })
-//         })
-//     }
-// }

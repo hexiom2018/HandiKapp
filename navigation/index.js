@@ -3,9 +3,14 @@ import Drawer from '../src/components/drawer/Drawer'
 import FirstScreen from '../src/screens/firstScreen/loading'
 import LogIn from '../src/screens/login/login'
 import Parking from '../src/screens/parking/Parking';
+import SignUp from '../src/screens/signUp/SignUp';
+
 
 const StackNavigator = createStackNavigator({
 
+    SignUp: {
+        screen: SignUp
+    },
     FirstScreen: {
         screen: FirstScreen
     },
@@ -17,6 +22,7 @@ const StackNavigator = createStackNavigator({
     }
 },
     {
+        headerMode: 'none',
         navigationOptions: {
             drawerLockMode: 'locked-closed'
         }
