@@ -30,7 +30,7 @@ export default class AppHeader extends React.Component {
 
                     />
                 </View>
-                <View>
+                <View style={{ flexGrow: 1 }}>
                     {
                         children
                     }

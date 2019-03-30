@@ -1,11 +1,17 @@
 import React from 'react';
-import { View, TextInput, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { connect } from 'react-redux'
+import { View, TextInput, Text, Image, StyleSheet, TouchableOpacity, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { connect } from 'react-redux';
 import { Marker } from 'react-native-maps';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Constants, Location, Permissions, Expo } from 'expo';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import imgHandi from '../../../assets/splash-screen/handi.png'
+import Icon from 'react-native-vector-icons/EvilIcons';
+import imgHandi from '../../../assets/splash-screen/handi.png';
+import navigationIcon from '../../../assets/navigationIcon.png';
+import flagIcon from '../../../assets/flagIcon.png';
+import minusIcon from '../../../assets/minusIcon.png';
+import checkIcon from '../../../assets/checkIcon.png';
+
+
 // import MapViewDirections from 'react-native-maps-directions';  // ye install krna hai
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -21,6 +27,10 @@ class Map extends React.Component {
             get: false,
             sellerLocation: false,
             search: '',
+            selectPlace: false,
+            exitParking: false,
+            searchInput: true,
+            suggestion: false
         }
     }
 
@@ -49,10 +59,19 @@ class Map extends React.Component {
             get: true,
         });
     };
-
+    select(item) {
+        this.setState({ item, selectPlace: true, suggestion: false })
+    }
+    confirm() {
+        this.setState({
+            exitParking: true,
+            selectPlace: false,
+            searchInput: false,
+        })
+    }
 
     render() {
-        const { currentLocation, get, errorMessage, userLocation, search } = this.state
+        const { currentLocation, get, selectPlace, userLocation, search, item, exitParking, searchInput, suggestion } = this.state
         const coordinates = [
             {
                 latitude: currentLocation.lat,
@@ -63,6 +82,8 @@ class Map extends React.Component {
                 longitude: userLocation.lng,
             },
         ]
+
+        const arr = [{ name: 'talha' }, { name: 'nabeel' }, { name: 'uzair' }]
         // const GOOGLE_MAPS_APIKEY = ''
         return (
             <View style={{ flex: 1 }}>
@@ -100,34 +121,121 @@ class Map extends React.Component {
                         />  */}
 
                         </MapView >
-                        <View style={{ alignItems: 'center', marginTop: 16, position: 'absolute' }}>
-                            <View style={styles.container}>
-                                <Icon name='search' size={20} color='#0291d3' style={styles.searchIcon} />
-                                <TextInput
-                                    value={search}
-                                    placeholderTextColor='rgba(13, 13, 13 , 0.7)'
-                                    style={styles.input}
-                                    placeholder="Søg efter destination..."
-                                    onChangeText={(search) => this.setState({ search })}
-                                />
-                            </View>
-                            <TouchableOpacity
-                                style={styles.view}
-                            // key={index}
-                            // onPress={() => this.views(users = item.data)}
-                            // onLongPress={() => this.alarm(circleMembers = item.data)}
-                            >
-                                <View>
-                                    <Text style={{ borderRadius: 8, backgroundColor: '#3498db', borderColor: '#3498db', borderWidth: 2, overflow: 'hidden' }}>
-                                        <Icon name='group' size={30} color='white' />
-                                    </Text>
+                        <View style={{ alignItems: 'center', marginTop: 14, position: 'absolute' }}>
+                            {searchInput &&
+                                <View style={styles.container}>
+                                    <Icon name='search' size={30} color='#0291d3' style={styles.searchIcon} />
+                                    <TextInput
+                                        value={search}
+                                        placeholderTextColor='rgba(13, 13, 13 , 0.7)'
+                                        style={styles.input}
+                                        placeholder="Søg efter destination..."
+                                        onChangeText={(search) => this.setState({ search, suggestion: true })}
+                                    />
                                 </View>
-                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 16, fontWeight: "700", paddingLeft: 8 }} >Talha</Text>
-                                    <Text style={{ paddingRight: 8 }} ><Icon name='arrow-right' size={30} color='gray' /></Text>
-                                </View>
-                            </TouchableOpacity>
+                            }
+                            {suggestion &&
+                                arr.map((item, index) => {
+                                    return (
+                                        <View key={index} style={styles.view}>
+                                            <View style={styles.border}></View>
+                                            <TouchableOpacity
+                                                style={{ paddingTop: 15, paddingBottom: 15, }}
+                                                onPress={() => this.select(item)}
+                                            >
+                                                <View style={styles.searchListItem}>
+                                                    <View>
+                                                        <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)' }} >{item.name}</Text>
+                                                        <Text style={{ fontSize: 10, color: '#0291d3' }} >karachi</Text>
+                                                    </View>
+                                                    <Text style={{ paddingRight: 8 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
+                                })
+                            }
                         </View>
+                        {selectPlace &&
+                            <View style={{ alignItems: 'center', bottom: 26, position: 'absolute' }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', borderRadius: 4, width: '100%' }}>
+                                    <View style={{ flex: 1, alignItems: 'flex-end', marginTop: 4, marginRight: 4 }}>
+                                        <Text onPress={() => this.setState({ selectPlace: false })}><Icon name='close' size={30} color='gray' /></Text>
+                                    </View>
+                                    <View style={{ marginBottom: 14, marginLeft: 20 }}>
+                                        <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{item.name}</Text>
+                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, }}>pakistan</Text>
+                                        <Text style={{ color: 'gray', paddingLeft: 16, fontSize: 12, }}>Talha</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() => this.confirm()}
+                                        style={{ flex: 1, width: 280, backgroundColor: '#6819e7', alignItems: 'center', marginBottom: 20, marginHorizontal: 30, paddingVertical: 12, borderRadius: 6, flexDirection: 'row', }}
+                                    >
+                                        <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
+                                            <View >
+                                                <Image
+                                                    source={navigationIcon}
+                                                    style={{ width: 30, height: 30 }}
+                                                />
+                                            </View>
+                                            <View >
+                                                <Text style={{ fontSize: 20, fontWeight: '500', color: 'white' }} > {'  Naviger til plads'}</Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        }
+                        {exitParking &&
+                            <View style={{ alignItems: 'center', bottom: 26, position: 'absolute' }}>
+                                <View style={{ flex: 1, backgroundColor: 'white', borderRadius: 4, width: '100%' }}>
+                                    <View style={{ flex: 1, alignItems: 'flex-end', marginTop: 4, marginRight: 4 }}>
+                                        <Text onPress={() => this.setState({ exitParking: false, selectPlace: true, searchInput: true })}><Icon name='close' size={30} color='gray' /></Text>
+                                    </View>
+                                    <View style={{ marginBottom: 16, marginLeft: 20 }}>
+                                        <View style={{ marginLeft: 10, flexDirection: "row", marginBottom: 10 }}>
+                                            <View style={{ marginTop: 4 }}>
+                                                <Image
+                                                    source={flagIcon}
+                                                    style={{ width: 20, height: 20 }}
+                                                />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>Destination</Text>
+                                                <Text style={{ color: 'gray', paddingLeft: 10, fontSize: 18, }}>Square 12258 sq</Text>
+                                            </View>
+                                        </View>
+                                        <View style={{ marginLeft: 10, flexDirection: "row" }}>
+                                            <View style={{ marginTop: 2 }}>
+                                                <Image
+                                                    source={minusIcon}
+                                                    style={{ width: 20, height: 20 }}
+                                                />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>Destination?</Text>
+                                                <Text style={{ color: '#0291d3', paddingLeft: 10, fontSize: 18, textDecorationLine: 'underline' }}>Square 12258 sq</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity
+                                        style={{ flex: 1, width: 280, backgroundColor: '#6819e7', alignItems: 'center', marginBottom: 20, marginHorizontal: 30, paddingVertical: 12, borderRadius: 6, flexDirection: 'row', }}
+                                    >
+                                        <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
+                                            <View >
+                                                <Image
+                                                    source={checkIcon}
+                                                    style={{ width: 30, height: 30 }}
+                                                />
+                                            </View>
+                                            <View >
+                                                <Text style={{ fontSize: 20, fontWeight: '500', color: 'white' }} > {'  Afslut Parkering'}</Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        }
                     </View>
                     :
                     <View style={{ flex: 1, backgroundColor: '#f2f6f9', alignItems: 'center' }}>
@@ -137,8 +245,8 @@ class Map extends React.Component {
             </View>
         );
     }
-
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -162,15 +270,37 @@ const styles = StyleSheet.create({
         paddingTop: 22
     },
     view: {
-        paddingLeft: 6,
-        paddingTop: 15,
-        paddingBottom: 15,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: 'white',
+        flex: 1,
         width: '95%',
+        backgroundColor: 'white',
+        paddingLeft: 16,
+    },
+    border: {
+        borderColor: '#e6e6e6',
+        borderTopWidth: 1,
+        width: '95%',
+    },
+    searchListItem: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    btnDirection: {
+        overflow: 'hidden',
+        marginTop: 5,
+        marginBottom: 5,
+        // marginRight:30,
+        borderWidth: 1,
+        paddingHorizontal: 30,
+        paddingVertical: 12,
+        borderRadius: 6,
+        borderColor: '#ffffff',
+        backgroundColor: '#3498db',
+        fontSize: 14,
+        fontWeight: '700',
+        // textDecorationLine: 'underline',
+        color: '#ffffff',
     },
 
 });
