@@ -9,7 +9,7 @@ export function Action(Email, Password) {
         firebase.auth().signInWithEmailAndPassword(Email, Password)
             .then((success) => {
                 console.log(success);
-                
+                 
             })
             .catch((error) => {
                 alert('Invalid Email & Password')
