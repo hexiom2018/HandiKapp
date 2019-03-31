@@ -13,7 +13,7 @@ export default class AppHeader extends React.Component {
     }
 
     menu() {
-        console.log('********');
+        this.props.navigation.openDrawer();
     }
 
     render() {
@@ -22,7 +22,6 @@ export default class AppHeader extends React.Component {
             <View style={{ flex: 1 }}>
                 <View>
                     <Header
-                        containerStyle={styles.header}
                         placement='center'
                         // rightComponent={{ text: 'LogOut', color: '#fff', onPress: () => this.LogOut() }}
                         centerComponent={{ text: 'Parkering', style: { color: '#fff' } }}
@@ -44,5 +43,6 @@ const styles = StyleSheet.create({
     header: {
         // backgroundColor: '#060606'
         // justifyContent: 'space-around',
+        
     }
 })

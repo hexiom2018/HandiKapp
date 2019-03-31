@@ -8,6 +8,7 @@ var config = {
     storageBucket: "handicapapp-52992.appspot.com",
     messagingSenderId: "102165340915"
 };
+
 firebase.initializeApp(config);
 
 export default firebase
