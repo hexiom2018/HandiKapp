@@ -21,7 +21,7 @@ class Button extends React.Component {
                 activeOpacity={0.7}
                 style={[styles.button,
                 border && { borderWidth: 1, borderColor: '#4419e7' },
-                background && { backgroundColor: '#4419e7' }
+                background && { backgroundColor: '#6719E7' }
                 ]}>
                 <View style={{ flexGrow: 1, alignItems: 'flex-end', paddingHorizontal: 3 }}>
                     <Text style={[{ fontSize: 18 },

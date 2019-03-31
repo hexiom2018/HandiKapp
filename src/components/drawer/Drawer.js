@@ -35,17 +35,7 @@ class DrawerContent extends Component {
         }
     }
 
-    componentWillReceiveProps(props) {
-
-    }
-
-    addServices() {
-        this.props.navigation.navigate('Aucationeer')
-    }
-
-    Home() {
-        this.props.navigation.navigate('Home')
-    }
+   
 
     Logout() {
         this.props.logout()
@@ -59,21 +49,7 @@ class DrawerContent extends Component {
         this.props.navigation.dispatch(resetAction)
     }
 
-    notification() {
-        this.props.navigation.navigate('notification')
-    }
-
-    MyProfile() {
-        this.props.navigation.navigate('Profile')
-    }
-
-    messages() {
-        this.props.navigation.navigate('Inbox')
-    }
-
-    contact() {
-        this.props.navigation.navigate('Contact')
-    }
+    
 
     render() {
         const { data } = this.state
@@ -83,10 +59,10 @@ class DrawerContent extends Component {
                     <TouchableOpacity onPress={() => this.Home()}>
                         <View style={styles.RouteName}>
                             <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                <Image
+                                {/* <Image
                                     style={styles.drawerIcons}
                                     source={HomeIcon}
-                                />
+                                /> */}
                             </View>
                             <View style={{ alignSelf: 'center' }}>
                                 <Text style={{ fontSize: 18, color: 'grey' }}>
@@ -98,10 +74,10 @@ class DrawerContent extends Component {
                     <TouchableOpacity onPress={() => this.addServices()}>
                         <View style={styles.RouteName}>
                             <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                <Image
+                                {/* <Image
                                     style={styles.drawerIcons}
                                     source={ServiceIcon}
-                                />
+                                /> */}
                             </View>
                             <View style={{ alignSelf: 'center' }}>
                                 <Text style={{ fontSize: 18, color: 'grey' }}>

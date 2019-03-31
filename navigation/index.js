@@ -14,11 +14,11 @@ const StackNavigator = createStackNavigator({
     LogIn: {
         screen: LogIn
     },
-    Parking: {
-        screen: Parking
-    },
     SignUp: {
         screen: SignUp
+    },
+    Parking: {
+        screen: Parking
     },
 },
     {

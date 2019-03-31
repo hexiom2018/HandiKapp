@@ -1,65 +1,164 @@
 import React from 'react';
-import { View, ImageBackground, Text, TextInput, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import { View, ImageBackground, Text, StyleSheet, StatusBar,TouchableOpacity , ScrollView} from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Splashh from '../../../assets/Splashh.jpg'
 import { connect } from 'react-redux';
 import { Action } from '../../Store/actions/authAction'
+import { bindActionCreators } from 'redux';
+import InputField from '../../components/inputField/InputField';
+import Button from '../../components/button/Button';
+import { Snackbar } from 'react-native-paper'
 
 class LogIn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            Email: '',
-            Password: '',
+            fields: [
+                {
+                    label: 'E-mail',
+                    name: 'email',
+                    type: 'email-address',
+                    placeholder: 'Din e-mail...',
+                    value: 'email',
+                    fontAwesome: false
+                },
+                {
+                    label: 'Password',
+                    name: 'key',
+                    type: 'ascii-capable',
+                    placeholder: 'Dit password...',
+                    value: 'password',
+                    fontAwesome: true
+                }
+
+            ],
         };
     }
 
-    logIn() {
-        const { Email, Password } = this.state
-        this.props.AuthUser(Email, Password)
+    onChange(value, text) {
+        this.setState({
+            [text]: value
+        })
+    }
+    function= ()=> {
+        this.props.navigation.navigate('SignUp')
+    }
+    Login() {
+        const { email,  password,  } = this.state
+        
+        if (email && password ) {
+            const { Action } = this.props.actions
+
+            Action(email, password).then(() => {
+                this.setState({
+                    alert: true,
+                    text: 'Successfully login'
+                })
+                const resetAction = StackActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({ routeName: 'Parking' }),
+                    ]
+                })
+                this.props.navigation.dispatch(resetAction)
+            }).catch(() => {
+                this.setState({
+                    alert: true,
+                    text: 'incorrect password'
+                })
+            })
+        } else {
+            this.setState({
+                alert: true,
+                text: 'Please fill all fields'
+            })
+        }
     }
 
     static navigationOptions = { header: null }
     render() {
-        const { Email, Password } = this.state
+        const { fields, text } = this.state
+
         return (
             <ImageBackground source={Splashh} style={{ width: '100%', height: '100%' }}>
                 <View style={{ flex: 1 }}>
                     <StatusBar hidden={true} />
-                    <View style={styles.Heading}><Text style={styles.headingText} onPress={() => this.logIn()}>LogIn</Text></View>
+                    <View style={styles.Heading}><Text style={styles.headingText} onPress={() => this.logIn()}>Log ind</Text></View>
+                    <View style={styles.body}>
+                        <View style={styles.form}>
+                            {
+                                fields &&
+                                fields.map((items, index) => {
+                                    return (
+                                        <InputField
+                                            key={index}
+                                            label={items.label}
+                                            name={items.name}
+                                            type={items.type}
+                                            PlaceholderColor={'black'}
+                                            TextColor={'white'}
+                                            fontAwesome={items.fontAwesome}
+                                            placeholder={items.placeholder}
+                                            change={(value) => this.onChange(value, items.value)}
+                                            InputBackgroundColor={'white'}
+                                            iconColor={'white'}
+                                        />
+                                    )
+                                })
+                            }
+                        </View>
+                        <View style={styles.button}>
+                                    <Button
+                                        color={true}
+                                        border={true}
+                                        name={'Log ind'}
+                                        background={true}
+                                        buttonAction={() => this.Login()}
+                                        textColor={'white'}
+                                    />
+                        </View>
+                    
                     <View>
-                        <View>
-                            <View style={{ padding: 2 }}>
-                                <Text style={{ color: 'black', fontSize: 20 }}>Enter Your Email</Text>
-                            </View>
-                            <View style={{ padding: 2 }}>
-                                <TextInput
-                                    value={Email}
-                                    placeholderTextColor='rgba(255,255,255,0.7)'
-                                    style={styles.input}
-                                    style={{ height: 40 }}
-                                    placeholder="email here"
-                                    onChangeText={(Email) => this.setState({ Email })}
-                                />
-                            </View>
-                        </View>
-                        <View>
-                            <View style={{ padding: 2 }}>
-                                <Text style={{ color: 'black', fontSize: 20 }}>Password:</Text>
-                            </View>
-                            <View style={{ padding: 2 }}>
-                                <TextInput
-                                    placeholderTextColor='rgba(255,255,255,0.7)'
-                                    secureTextEntry={true}
-                                    style={styles.input}
-                                    placeholder="email here"
-                                    value={Password}
-                                    onChangeText={(Password) => this.setState({ Password })}
-                                />
-                            </View>
-                        </View>
+                    <TouchableOpacity
+                onPress={this.function}
+                activeOpacity={0.7}
+                style={[styles.button,
+                ]}>
+                <View style={{  alignItems: 'flex-end', paddingHorizontal: 3,}}>
+                    <Text style={{ fontSize: 15,color:'white',borderBottomColor:'white',borderBottomWidth:1}
+                    }>
+                        {'Glemt dit password?'}
+                    </Text>
+                </View>
+                
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={this.function}
+                activeOpacity={0.7}
+                style={[styles.button,
+                ]}>
+                <View style={{  alignItems: 'flex-end', paddingHorizontal: 3 }}>
+                    <Text style={{ fontSize: 16 ,color:'white',fontWeight: '500' }}>
+                        {'+Opret ny bruger her'}
+                    </Text>
+                </View>
+                
+            </TouchableOpacity>
+            </View>
                     </View>
                 </View>
+                <Snackbar
+                    visible={this.state.alert}
+                    onDismiss={() => this.setState({ alert: false })}
+                    action={{
+                        label: 'Ok',
+                        onPress: () => {
+                            // Do something
+                        },
+                    }}
+                >
+                    {text}
+                </Snackbar>
             </ImageBackground>
         );
     }
@@ -69,9 +168,9 @@ const styles = StyleSheet.create({
     headingText: {
         alignItems: "center",
         color: '#ffffff',
-        margin: 10,
-        fontWeight: '600',
-        fontSize: 20
+        fontWeight: '200',
+        fontSize: 20,
+        marginTop:18
     },
 
     Heading: {
@@ -81,35 +180,28 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5
     },
     input: {
-        backgroundColor: 'rgba(255,255,255,0.3)',
+        backgroundColor: '#ffffff',
         marginBottom: 20,
-        color: '#fff',
-        height: 40,
+        height: 45,
         width: 300,
         paddingHorizontal: 10,
         fontSize: 18
     },
-    buton: {
+    button: {
+        width: '100%',
         alignItems: 'center',
-        backgroundColor: '#0055ff',
-        paddingVertical: 10,
-        marginBottom: 20,
-        width: 220,
-        // justifyContent: 'space-between',
+        paddingVertical: 15
     },
-    google: {
-        alignItems: 'center',
-        backgroundColor: '#00b3b3',
+    form: {
+        // borderWidth: 1,
+        width: '100%',
         paddingVertical: 10,
-        marginBottom: 20,
-        width: 220,
-        // justifyContent: 'space-between',
+        alignItems: 'center'
     },
-    ButtonText: {
-        fontWeight: 'bold',
-        color: "#ffff",
-        // alignItems:'center'
-        fontSize: 20
+    body: {
+        flex:1,
+        alignItems: "center",
+        justifyContent: "center",
     },
 });
 function mapStateToProps(states) {
@@ -119,9 +211,9 @@ function mapStateToProps(states) {
 
 function mapDispatchToProps(dispatch) {
     return ({
-        AuthUser: (Email, Password) => {
-            dispatch(Action(Email, Password));
-        },
+        actions: bindActionCreators({
+            Action
+        }, dispatch)
     })
 }
 

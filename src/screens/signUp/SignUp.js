@@ -107,7 +107,9 @@ class SignUp extends React.Component {
     }
 
     nextPage() {
-        const { email, number, password, againPassword } = this.state
+        const { email, number, password, againPassword , currentPosition} = this.state
+
+        this.setState({ currentPosition: currentPosition + 1 })
 
         if (email && number && password && againPassword) {
             if (password !== againPassword) {
@@ -203,6 +205,8 @@ class SignUp extends React.Component {
                                                 secure={items.secure}
                                                 fontAwesome={items.fontAwesome}
                                                 placeholder={items.placeholder}
+                                                PlaceholderColor={'black'}
+                                                iconColor={'grey'}
                                                 change={(value) => this.onChange(value, items.value)}
                                             />
                                         )
@@ -220,6 +224,8 @@ class SignUp extends React.Component {
                                         type={'number-pad'}
                                         placeholder={'Bilens reg.nr...'}
                                         value={register}
+                                        PlaceholderColor={'black'}
+                                        iconColor={'grey'}
                                         change={(value) => this.onChange(value, 'register')}
                                     />
                                 </View>
@@ -274,6 +280,8 @@ class SignUp extends React.Component {
                                         placeholder={'Dit kortnr...'}
                                         value={disabledPark}
                                         fontAwesome={true}
+                                        PlaceholderColor={'black'}
+                                        iconColor={'grey'}
                                         change={(value) => this.onChange(value, 'disabledPark')}
                                     />
                                 </View>

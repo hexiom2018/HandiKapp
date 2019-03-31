@@ -15,7 +15,7 @@ class InputField extends React.Component {
     }
 
     render() {
-        const { name, label, type, placeholder, secure, fontAwesome } = this.props
+        const { name, label, type, placeholder, value, fontAwesome,PlaceholderColor,TextColor,iconColor} = this.props
         return (
             <View style={styles.form}>
                 <View style={styles.label}>
@@ -23,20 +23,20 @@ class InputField extends React.Component {
                         {
                             fontAwesome ?
                                 <IconFont
-                                    color={'grey'}
+                                    color={iconColor}
                                     size={25}
                                     name={name}
                                 />
                                 :
                                 <Icon
-                                    color={'grey'}
+                                    color={iconColor}
                                     size={25}
                                     name={name}
                                 />
                         }
                     </View>
                     <View style={{ alignSelf: 'center' }}>
-                        <Text style={{ fontSize: 17, fontWeight: '500' }}>
+                        <Text style={{ fontSize: 17, fontWeight: '500', color:TextColor }}>
                             {label}
                         </Text>
                     </View>
@@ -49,7 +49,7 @@ class InputField extends React.Component {
                         secureTextEntry={secure}
                         placeholder={placeholder}
                         onChangeText={(text) => this.props.change(text)}
-                        placeholderTextColor={'black'}
+                        placeholderTextColor={PlaceholderColor}
                     />
                 </View>
             </View>
@@ -58,6 +58,7 @@ class InputField extends React.Component {
 }
 
 const styles = StyleSheet.create({
+
     form: {
         width: '90%',
         // borderWidth: 1,
@@ -73,7 +74,8 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 20,
         borderRadius: 4,
-        borderColor: 'lightgrey'
+        borderColor: 'lightgrey',
+        backgroundColor:'white'
     }
 })
 
