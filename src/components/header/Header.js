@@ -13,7 +13,12 @@ export default class AppHeader extends React.Component {
     }
 
     menu() {
-        this.props.navigation.openDrawer();
+        const { back } = this.props
+        if (back) {
+            this.props.goBack()
+        } else {
+            this.props.openDrawer()
+        }
     }
 
     render() {

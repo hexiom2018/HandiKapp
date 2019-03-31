@@ -30,16 +30,19 @@ const StackNavigator = createStackNavigator({
 
 const DrawerNavigation = createDrawerNavigator(
     {
-        Initial: {
+        Parking: {
             screen: StackNavigator
         },
     },
     {
+        drawerPosition: 'left',
         drawerWidth: 300,
-        initialRouteName: 'Initial',
+        initialRouteName: 'Parking',
         contentComponent: Drawer
     }
 )
 
+
 const Navigation = createAppContainer(DrawerNavigation)
+
 export default Navigation;

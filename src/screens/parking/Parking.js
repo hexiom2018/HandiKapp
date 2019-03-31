@@ -12,12 +12,15 @@ class Parking extends React.Component {
 
         }
     }
+    // static navigationOptions = { header: null }
 
-    static navigationOptions = { header: null }
+    openMenu() {
+        this.props.navigation.openDrawer()
+    }
 
     render() {
         return (
-            <AppHeader>
+            <AppHeader openDrawer={() => this.openMenu()}>
                 <Map />
             </AppHeader>
         )
