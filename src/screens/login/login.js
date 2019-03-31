@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, Text, StyleSheet, StatusBar,TouchableOpacity , ScrollView} from 'react-native';
+import { View, ImageBackground, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Splashh from '../../../assets/Splashh.jpg'
 import { connect } from 'react-redux';
@@ -40,19 +40,19 @@ class LogIn extends React.Component {
             [text]: value
         })
     }
-    function= ()=> {
+    function = () => {
         this.props.navigation.navigate('SignUp')
     }
     Login() {
-        const { email,  password,  } = this.state
-        
-        if (email && password ) {
+        const { email, password, } = this.state
+
+        if (email && password) {
             const { Action } = this.props.actions
 
             Action(email, password).then(() => {
                 this.setState({
                     alert: true,
-                    text: 'Successfully login'
+                    text: 'Log ind med succes'
                 })
                 const resetAction = StackActions.reset({
                     index: 0,
@@ -64,13 +64,13 @@ class LogIn extends React.Component {
             }).catch(() => {
                 this.setState({
                     alert: true,
-                    text: 'incorrect password'
+                    text: 'Forkert kodeord'
                 })
             })
         } else {
             this.setState({
                 alert: true,
-                text: 'Please fill all fields'
+                text: 'Udfyld venligst alle felter'
             })
         }
     }
@@ -108,43 +108,43 @@ class LogIn extends React.Component {
                             }
                         </View>
                         <View style={styles.button}>
-                                    <Button
-                                        color={true}
-                                        border={true}
-                                        name={'Log ind'}
-                                        background={true}
-                                        buttonAction={() => this.Login()}
-                                        textColor={'white'}
-                                    />
+                            <Button
+                                color={true}
+                                border={true}
+                                name={'Log ind'}
+                                background={true}
+                                buttonAction={() => this.Login()}
+                                textColor={'white'}
+                            />
                         </View>
-                    
-                    <View>
-                    <TouchableOpacity
-                onPress={this.function}
-                activeOpacity={0.7}
-                style={[styles.button,
-                ]}>
-                <View style={{  alignItems: 'flex-end', paddingHorizontal: 3,}}>
-                    <Text style={{ fontSize: 15,color:'white',borderBottomColor:'white',borderBottomWidth:1}
-                    }>
-                        {'Glemt dit password?'}
-                    </Text>
-                </View>
-                
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={this.function}
-                activeOpacity={0.7}
-                style={[styles.button,
-                ]}>
-                <View style={{  alignItems: 'flex-end', paddingHorizontal: 3 }}>
-                    <Text style={{ fontSize: 16 ,color:'white',fontWeight: '500' }}>
-                        {'+Opret ny bruger her'}
-                    </Text>
-                </View>
-                
-            </TouchableOpacity>
-            </View>
+
+                        <View>
+                            <TouchableOpacity
+                                onPress={this.function}
+                                activeOpacity={0.7}
+                                style={[styles.button,
+                                ]}>
+                                <View style={{ alignItems: 'flex-end', paddingHorizontal: 3, }}>
+                                    <Text style={{ fontSize: 15, color: 'white', borderBottomColor: 'white', borderBottomWidth: 1 }
+                                    }>
+                                        {'Glemt dit password?'}
+                                    </Text>
+                                </View>
+
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={this.function}
+                                activeOpacity={0.7}
+                                style={[styles.button,
+                                ]}>
+                                <View style={{ alignItems: 'flex-end', paddingHorizontal: 3 }}>
+                                    <Text style={{ fontSize: 16, color: 'white', fontWeight: '500' }}>
+                                        {'+Opret ny bruger her'}
+                                    </Text>
+                                </View>
+
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
                 <Snackbar
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontWeight: '200',
         fontSize: 20,
-        marginTop:18
+        marginTop: 18
     },
 
     Heading: {
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     body: {
-        flex:1,
+        flex: 1,
         alignItems: "center",
         justifyContent: "center",
     },
