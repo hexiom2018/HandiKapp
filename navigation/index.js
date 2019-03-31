@@ -8,9 +8,6 @@ import SignUp from '../src/screens/signUp/SignUp';
 
 const StackNavigator = createStackNavigator({
 
-    SignUp: {
-        screen: SignUp
-    },
     FirstScreen: {
         screen: FirstScreen
     },
@@ -19,7 +16,10 @@ const StackNavigator = createStackNavigator({
     },
     Parking: {
         screen: Parking
-    }
+    },
+    SignUp: {
+        screen: SignUp
+    },
 },
     {
         headerMode: 'none',
