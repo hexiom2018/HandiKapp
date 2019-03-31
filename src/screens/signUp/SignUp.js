@@ -114,7 +114,7 @@ class SignUp extends React.Component {
     }
 
     nextPage() {
-        const { email, number, password, againPassword } = this.state
+        const { email, number, password, againPassword , currentPosition} = this.state
 
         this.setState({ currentPosition: currentPosition + 1 })
 

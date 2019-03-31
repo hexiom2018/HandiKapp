@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground, Text, StyleSheet, StatusBar,TouchableOpacity} from 'react-native';
+import { View, ImageBackground, Text, StyleSheet, StatusBar,TouchableOpacity , ScrollView} from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Splashh from '../../../assets/Splashh.jpg'
 import { connect } from 'react-redux';
@@ -41,7 +41,7 @@ class LogIn extends React.Component {
         })
     }
     function= ()=> {
-        console.log(',.....')
+        this.props.navigation.navigate('SignUp')
     }
     Login() {
         const { email,  password,  } = this.state
@@ -117,7 +117,7 @@ class LogIn extends React.Component {
                                         textColor={'white'}
                                     />
                         </View>
-                    </View>
+                    
                     <View>
                     <TouchableOpacity
                 onPress={this.function}
@@ -138,13 +138,13 @@ class LogIn extends React.Component {
                 style={[styles.button,
                 ]}>
                 <View style={{  alignItems: 'flex-end', paddingHorizontal: 3 }}>
-                    <Text style={{ fontSize: 16 ,color:'white',fontWeight: '500' }                  
-                    }>
+                    <Text style={{ fontSize: 16 ,color:'white',fontWeight: '500' }}>
                         {'+Opret ny bruger her'}
                     </Text>
                 </View>
                 
             </TouchableOpacity>
+            </View>
                     </View>
                 </View>
                 <Snackbar
@@ -199,7 +199,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     body: {
-       marginTop: 70
+        flex:1,
+        alignItems: "center",
+        justifyContent: "center",
     },
 });
 function mapStateToProps(states) {

@@ -4,21 +4,18 @@ import firebase from '../../config/Firebase'
 var db = firebase.database()
 
 
-
 export function Action(Email, Password) {
     return dispatch => {
-        firebase.auth().signInWithEmailAndPassword(Email, Password)
+        return new Promise(function (resolve, reject){
+            firebase.auth().signInWithEmailAndPassword(Email, Password)
             .then((success) => {
                 console.log(success);
                 resolve()
-
-                 
             })
             .catch((error) => {
-                // alert('Invalid Email & Password')
-                // console.log('something went wrong', error)
                 reject()
             })
+        })
     }
 }
 
