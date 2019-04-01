@@ -20,7 +20,8 @@ class LogIn extends React.Component {
                     type: 'email-address',
                     placeholder: 'Din e-mail...',
                     value: 'email',
-                    fontAwesome: false
+                    fontAwesome: false,
+                    secure: false,
                 },
                 {
                     label: 'Password',
@@ -28,6 +29,7 @@ class LogIn extends React.Component {
                     type: 'ascii-capable',
                     placeholder: 'Dit password...',
                     value: 'password',
+                    secure: true,
                     fontAwesome: true
                 }
 

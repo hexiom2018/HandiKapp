@@ -13,7 +13,7 @@ import { StackActions, NavigationActions } from 'react-navigation';
 import HomeIcon from '../../../assets/home-icon.png'
 import { Icon } from 'react-native-elements'
 import ServiceIcon from '../../../assets/services.png'
-
+import { LinearGradient } from 'expo';
 class DrawerContent extends Component {
     constructor() {
         super()
@@ -49,7 +49,7 @@ class DrawerContent extends Component {
         this.props.navigation.dispatch(resetAction)
     }
 
-    
+
 
     render() {
         const { data } = this.state
