@@ -12,7 +12,6 @@ import minusIcon from '../../../assets/minusIcon.png';
 import checkIcon from '../../../assets/checkIcon.png';
 
 
-// import MapViewDirections from 'react-native-maps-directions';  // ye install krna hai
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -28,6 +27,7 @@ class Map extends React.Component {
             sellerLocation: false,
             search: '',
             selectPlace: false,
+            selectPlaceConfirm: false,
             exitParking: false,
             searchInput: true,
             suggestion: false
@@ -42,6 +42,17 @@ class Map extends React.Component {
         } else {
             this._getLocationAsync();
         }
+    }
+
+    componentWillReceiveProps(props) {
+        // const { backBtn } = props
+        // if (backBtn === true) {
+        //     this.setState({
+        //         selectPlace: false,
+        //         searchInput: true,
+        //         suggestion: false
+        //     })
+        // }
     }
 
     _getLocationAsync = async () => {
@@ -60,18 +71,38 @@ class Map extends React.Component {
         });
     };
     select(item) {
-        this.setState({ item, selectPlace: true, suggestion: false })
+        const { title } = this.props
+        title('Søgning')
+        this.setState({
+            item,
+            selectPlace: true,
+            suggestion: false
+        })
     }
+    place() {
+        const { title } = this.props
+        this.setState({
+            selectPlaceConfirm: true,
+            selectPlace: false,
+            searchInput: false,
+            suggestion: false
+        })
+        title('Parkering')
+    }
+
     confirm() {
+        const { title } = this.props
         this.setState({
             exitParking: true,
             selectPlace: false,
             searchInput: false,
         })
+        // title('Parkering')
     }
 
     render() {
-        const { currentLocation, get, selectPlace, userLocation, search, item, exitParking, searchInput, suggestion } = this.state
+        const { currentLocation, get, selectPlace, userLocation, search, item, exitParking, searchInput, suggestion, selectPlaceConfirm } = this.state
+        const { backBtn } = this.props
         const coordinates = [
             {
                 latitude: currentLocation.lat,
@@ -157,9 +188,9 @@ class Map extends React.Component {
                             }
                         </View>
                         {selectPlace &&
-                            <View style={{ alignItems: 'center', bottom: 26, position: 'absolute' }}>
-                                <View style={{ flex: 1, backgroundColor: 'white', borderRadius: 4, width: '100%' }}>
-                                    <View style={{ flex: 1, alignItems: 'flex-end', marginTop: 4, marginRight: 4 }}>
+                            <View style={styles.bottomView}>
+                                <View style={styles.bottomDiv}>
+                                    <View style={styles.closeBtn}>
                                         <Text onPress={() => this.setState({ selectPlace: false })}><Icon name='close' size={30} color='gray' /></Text>
                                     </View>
                                     <View style={{ marginBottom: 14, marginLeft: 20 }}>
@@ -168,8 +199,8 @@ class Map extends React.Component {
                                         <Text style={{ color: 'gray', paddingLeft: 16, fontSize: 12, }}>Talha</Text>
                                     </View>
                                     <TouchableOpacity
-                                        onPress={() => this.confirm()}
-                                        style={{ flex: 1, width: 280, backgroundColor: '#6819e7', alignItems: 'center', marginBottom: 20, marginHorizontal: 30, paddingVertical: 12, borderRadius: 6, flexDirection: 'row', }}
+                                        onPress={() => this.place()}
+                                        style={styles.bottomViewBtn}
                                     >
                                         <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
                                             <View >
@@ -179,7 +210,36 @@ class Map extends React.Component {
                                                 />
                                             </View>
                                             <View >
-                                                <Text style={{ fontSize: 20, fontWeight: '500', color: 'white' }} > {'  Naviger til plads'}</Text>
+                                                <Text style={styles.btnText} > {'  Naviger til plads'}</Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        }
+                        {selectPlaceConfirm &&
+                            <View style={styles.bottomView}>
+                                <View style={styles.bottomDiv}>
+                                    <View style={styles.closeBtn}>
+                                        <Text onPress={() => this.setState({ selectPlaceConfirm: false, searchInput: true })}><Icon name='close' size={30} color='gray' /></Text>
+                                    </View>
+                                    <View style={{ marginBottom: 14, marginLeft: 20 }}>
+                                        <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{item.name}</Text>
+                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, }}>{'pakistan zindabad <3'}</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        onPress={() => this.confirm()}
+                                        style={styles.bottomViewBtn}
+                                    >
+                                        <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
+                                            <View >
+                                                <Image
+                                                    source={navigationIcon}
+                                                    style={{ width: 30, height: 30 }}
+                                                />
+                                            </View>
+                                            <View >
+                                                <Text style={styles.btnText} > {'  Naviger til plads'}</Text>
                                             </View>
                                         </View>
                                     </TouchableOpacity>
@@ -187,10 +247,10 @@ class Map extends React.Component {
                             </View>
                         }
                         {exitParking &&
-                            <View style={{ alignItems: 'center', bottom: 26, position: 'absolute' }}>
-                                <View style={{ flex: 1, backgroundColor: 'white', borderRadius: 4, width: '100%' }}>
-                                    <View style={{ flex: 1, alignItems: 'flex-end', marginTop: 4, marginRight: 4 }}>
-                                        <Text onPress={() => this.setState({ exitParking: false, selectPlace: true, searchInput: true })}><Icon name='close' size={30} color='gray' /></Text>
+                            <View style={styles.bottomView}>
+                                <View style={styles.bottomDiv}>
+                                    <View style={styles.closeBtn}>
+                                        <Text onPress={() => this.setState({ exitParking: false, selectPlaceConfirm: true })}><Icon name='close' size={30} color='gray' /></Text>
                                     </View>
                                     <View style={{ marginBottom: 16, marginLeft: 20 }}>
                                         <View style={{ marginLeft: 10, flexDirection: "row", marginBottom: 10 }}>
@@ -219,7 +279,7 @@ class Map extends React.Component {
                                         </View>
                                     </View>
                                     <TouchableOpacity
-                                        style={{ flex: 1, width: 280, backgroundColor: '#6819e7', alignItems: 'center', marginBottom: 20, marginHorizontal: 30, paddingVertical: 12, borderRadius: 6, flexDirection: 'row', }}
+                                        style={styles.bottomViewBtn}
                                     >
                                         <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
                                             <View >
@@ -229,7 +289,7 @@ class Map extends React.Component {
                                                 />
                                             </View>
                                             <View >
-                                                <Text style={{ fontSize: 20, fontWeight: '500', color: 'white' }} > {'  Afslut Parkering'}</Text>
+                                                <Text style={styles.btnText} > {'  Afslut Parkering'}</Text>
                                             </View>
                                         </View>
                                     </TouchableOpacity>
@@ -286,22 +346,39 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    btnDirection: {
-        overflow: 'hidden',
-        marginTop: 5,
-        marginBottom: 5,
-        // marginRight:30,
-        borderWidth: 1,
-        paddingHorizontal: 30,
+    bottomView: {
+        alignItems: 'center',
+        bottom: 26,
+        position: 'absolute'
+    },
+    bottomDiv: {
+        flex: 1,
+        backgroundColor: 'white',
+        borderRadius: 4,
+        width: '100%'
+    },
+    closeBtn: {
+        flex: 1,
+        alignItems: 'flex-end',
+        marginTop: 4,
+        marginRight: 4
+    },
+    bottomViewBtn: {
+        flex: 1,
+        width: 280,
+        backgroundColor: '#6819e7',
+        alignItems: 'center',
+        marginBottom: 20,
+        marginHorizontal: 30,
         paddingVertical: 12,
         borderRadius: 6,
-        borderColor: '#ffffff',
-        backgroundColor: '#3498db',
-        fontSize: 14,
-        fontWeight: '700',
-        // textDecorationLine: 'underline',
-        color: '#ffffff',
+        flexDirection: 'row'
     },
+    btnText: {
+        fontSize: 20,
+        fontWeight: '500',
+        color: 'white'
+    }
 
 });
 

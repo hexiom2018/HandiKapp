@@ -107,7 +107,7 @@ class SignUp extends React.Component {
     }
 
     nextPage() {
-        const { email, number, password, againPassword , currentPosition} = this.state
+        const { email, number, password, againPassword, currentPosition } = this.state
 
         this.setState({ currentPosition: currentPosition + 1 })
 
@@ -145,18 +145,18 @@ class SignUp extends React.Component {
             UserSignUp(obj).then(() => {
                 this.setState({
                     alert: true,
-                    text: 'Successfully Signup'
+                    text: 'Registrering med succes'
                 })
             }).catch(() => {
                 this.setState({
                     alert: true,
-                    text: 'User already exists'
+                    text: 'Bruger eksistere allerede'
                 })
             })
         } else {
             this.setState({
                 alert: true,
-                text: 'Please fill all fields'
+                text: 'Udfyld venligst alle felter'
             })
         }
     }
