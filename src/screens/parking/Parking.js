@@ -12,8 +12,7 @@ class Parking extends React.Component {
             title: 'Parkering'
         }
     }
-
-    titleHeader(title) {
+ titleHeader(title) {
         if (title === 'Søgning') {
 
             this.setState({ title: title })
@@ -22,16 +21,19 @@ class Parking extends React.Component {
             this.setState({ title: title, backBtn: true })
         }
     }
+    // static navigationOptions = { header: null }
 
-
-
-    static navigationOptions = { header: null }
+    openMenu() {
+        this.props.navigation.openDrawer()
+    }
 
     render() {
         const { title, backBtn } = this.state
         return (
-            <AppHeader
+<<<<<<< HEAD
+           <AppHeader
                 headerTitle={title}
+                openDrawer={() => this.openMenu()}
                 back={(back) => this.titleHeader(back)}
             >
                 <Map

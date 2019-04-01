@@ -46,6 +46,7 @@ class InputField extends React.Component {
                         keyboardType={type}
                         style={styles.input}
                         // value={value}
+                        secureTextEntry={secure}
                         placeholder={placeholder}
                         onChangeText={(text) => this.props.change(text)}
                         placeholderTextColor={PlaceholderColor}

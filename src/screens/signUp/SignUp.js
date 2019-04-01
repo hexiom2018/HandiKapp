@@ -63,6 +63,7 @@ class SignUp extends React.Component {
                     type: 'email-address',
                     placeholder: 'Din e-mail...',
                     value: 'email',
+                    secure: false,
                     fontAwesome: false
                 },
                 {
@@ -71,6 +72,7 @@ class SignUp extends React.Component {
                     type: 'number-pad',
                     placeholder: 'Dit mobilnummer...',
                     value: 'number',
+                    secure: false,
                     fontAwesome: false
                 },
                 {
@@ -79,6 +81,7 @@ class SignUp extends React.Component {
                     type: 'ascii-capable',
                     placeholder: 'Dit password...',
                     value: 'password',
+                    secure: true,
                     fontAwesome: true
                 },
                 {
@@ -87,22 +90,12 @@ class SignUp extends React.Component {
                     type: 'ascii-capable',
                     placeholder: 'Gentag dit password...',
                     value: 'againPassword',
+                    secure: true,
                     fontAwesome: true
                 },
             ],
             currentPosition: 0,
             visible: false,
-            radioGroupList:
-                [{
-                    label: 'Car',
-                    value: 'transport_car'
-                }, {
-                    label: 'Bike',
-                    value: 'transport_bike'
-                }, {
-                    label: 'Bus',
-                    value: 'transport_bus'
-                }]
         }
 
     }
@@ -209,6 +202,7 @@ class SignUp extends React.Component {
                                                 label={items.label}
                                                 name={items.name}
                                                 type={items.type}
+                                                secure={items.secure}
                                                 fontAwesome={items.fontAwesome}
                                                 placeholder={items.placeholder}
                                                 PlaceholderColor={'black'}
