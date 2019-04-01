@@ -10,18 +10,16 @@ export default class AppHeader extends React.Component {
     }
 
     menu() {
-<<<<<<< HEAD
-  const { headerTitle, back } = this.props
+        const { headerTitle, back } = this.props
         if (headerTitle === 'Parkering') {
-            this.props.navigation.openDrawer();
+            this.props.openDrawer()
         } else {
             back('Parkering')
         }
-         if (back) {
-            this.props.goBack()
-        } else {
-            this.props.openDrawer()
-        }
+        // if (back) {
+        //     this.props.goBack()
+        // } else {
+        // }
     }
 
     render() {

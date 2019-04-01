@@ -12,26 +12,25 @@ class Parking extends React.Component {
             title: 'Parkering'
         }
     }
- titleHeader(title) {
+    titleHeader(title) {
         if (title === 'Søgning') {
 
             this.setState({ title: title })
-        } else if(title === 'Parkering') {
+        } else if (title === 'Parkering') {
             console.log('back===back');
             this.setState({ title: title, backBtn: true })
         }
     }
-    // static navigationOptions = { header: null }
-
+    
     openMenu() {
         this.props.navigation.openDrawer()
     }
-
+    
+    static navigationOptions = { header: null }
     render() {
         const { title, backBtn } = this.state
         return (
-<<<<<<< HEAD
-           <AppHeader
+            <AppHeader
                 headerTitle={title}
                 openDrawer={() => this.openMenu()}
                 back={(back) => this.titleHeader(back)}
