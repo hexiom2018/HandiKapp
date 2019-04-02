@@ -40,7 +40,7 @@ const DrawerNavigation = createDrawerNavigator(
     },
     {
         drawerPosition: 'left',
-        drawerWidth: 300,
+        drawerWidth: 250,
         initialRouteName: 'Parking',
         contentComponent: Drawer
     }
