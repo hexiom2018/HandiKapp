@@ -59,82 +59,81 @@ class DrawerContent extends Component {
                     <TouchableOpacity onPress={() => this.Home()}>
                         <View style={styles.RouteName}>
                             <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                {/* <Image
-                                    style={styles.drawerIcons}
-                                    source={HomeIcon}
-                                /> */}
-                            </View>
-                            <View style={{ alignSelf: 'center' }}>
-                                <Text style={{ fontSize: 18, color: 'grey' }}>
-                                    Home
-                                </Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.addServices()}>
-                        <View style={styles.RouteName}>
-                            <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                {/* <Image
-                                    style={styles.drawerIcons}
-                                    source={ServiceIcon}
-                                /> */}
-                            </View>
-                            <View style={{ alignSelf: 'center' }}>
-                                <Text style={{ fontSize: 18, color: 'grey' }}>
-                                    Set Auction
-                                </Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.MyProfile()}>
-                        <View style={styles.RouteName}>
-                            <View style={{ alignSelf: 'center', marginRight: 10 }}>
                                 <Icon
                                     size={25}
                                     style={styles.drawerIcons}
                                     name={'settings'}
                                 />
                             </View>
-                            <View style={{ alignSelf: 'center' }}>
-                                <Text style={{ fontSize: 18, color: 'grey' }}>
-                                    Profile
-                                </Text>
-                            </View>
                         </View>
-                    </TouchableOpacity>
-
-                    <View style={{ borderWidth: 1, borderColor: 'lightgrey' }}>
-
                     </View>
+                    <View style={styles.drawerRoutes}>
 
-                    <TouchableOpacity onPress={() => this.messages()}>
-                        <View style={styles.RouteName}>
-                            <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                <Icon
-                                    size={25}
-                                    style={styles.drawerIcons}
-                                    name={'chat'}
-                                />
-                            </View>
-                            <View style={{ alignSelf: 'center' }}>
-                                <Text style={{ fontSize: 18, color: 'grey' }}>
-                                    Messages
+                        <TouchableOpacity onPress={() => this.addServices()}>
+                            <View style={styles.RouteName}>
+                                <View style={{ alignSelf: 'center', marginRight: 10 }}>
+                                    <Icon
+                                        size={25}
+                                        style={styles.drawerIcons}
+                                        name={'settings'}
+                                    />
+                                </View>
+                                <View style={{ alignSelf: 'center' }}>
+                                    <Text style={{ fontSize: 18, color: 'white' }}>
+                                        Min Konto
                                 </Text>
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.MyProfile()}>
+                            <View style={styles.RouteName}>
+                                <View style={{ alignSelf: 'center', marginRight: 10 }}>
+                                    <Icon
+                                        size={25}
+                                        style={styles.drawerIcons}
+                                        name={'settings'}
+                                    />
+                                </View>
+                                <View style={{ alignSelf: 'center' }}>
+                                    <Text style={{ fontSize: 18, color: 'white' }}>
+                                        Tilfo/fjern en P-plads
+                                </Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+
+
+                        <TouchableOpacity onPress={() => this.messages()}>
+                            <View style={styles.RouteName}>
+                                <View style={{ alignSelf: 'center', marginRight: 10 }}>
+                                    <Icon
+                                        size={25}
+                                        style={styles.drawerIcons}
+                                        name={'chat'}
+                                    />
+                                </View>
+                                <View style={{ alignSelf: 'center' }}>
+                                    <Text style={{ fontSize: 18, color: 'white' }}>
+                                        Om Handikapp
+                                </Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                      
+                    </View>
+                    <View style={{ justifyContent: 'flex-end' }}>
                     <TouchableOpacity onPress={() => this.Logout()}>
-                        <View style={styles.RouteName}>
-                            <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                <Icon
-                                    size={25}
-                                    style={styles.drawerIcons}
-                                    name={'lock'}
-                                />
-                            </View>
-                            <View style={{ alignSelf: 'center' }}>
-                                <Text style={{ fontSize: 18, color: 'grey' }}>
-                                    Logout
+                            <View style={styles.logout}>
+                                <View style={{ alignSelf: 'center', marginRight: 10 }}>
+                                    <Icon
+                                        size={25}
+                                        style={styles.drawerIcons}
+                                        name={'lock'}
+                                    />
+                                </View>
+                                <View style={{ alignSelf: 'center' }}>
+                                    <Text style={{ fontSize: 18, color: 'white' }}>
+                                        Log ud
                                 </Text>
                             </View>
                         </View>
@@ -169,9 +168,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     drawerRoutes: {
-        // flex: 1,
+        flex: 1,
         width: '100%',
-        paddingVertical: 10
+        paddingVertical: 10,
         // borderWidth: 2,
     },
     name: {

@@ -98,6 +98,7 @@ class LogIn extends React.Component {
                                             name={items.name}
                                             type={items.type}
                                             PlaceholderColor={'black'}
+                                            secure={items.secure}
                                             TextColor={'white'}
                                             fontAwesome={items.fontAwesome}
                                             placeholder={items.placeholder}
