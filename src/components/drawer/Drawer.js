@@ -11,7 +11,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import { StackActions, NavigationActions } from 'react-navigation';
 import HomeIcon from '../../../assets/home-icon.png'
-import { Icon } from 'react-native-elements'
+// import { Icon } from 'react-native-elements'
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import ServiceIcon from '../../../assets/services.png'
 import { LinearGradient } from 'expo';
 class DrawerContent extends Component {
@@ -56,34 +58,35 @@ class DrawerContent extends Component {
         return (
             <View style={styles.container}>
                 <LinearGradient
-                    colors={['#2fd3ce', '#008cdb']}
+                    colors={['#03b8b7', '#0093d0']}
                     style={{ flex: 1 }}
-                    
+
                 >
-                    <View style={{ justifyContent: 'flex-start', marginTop:20 }}>
-                        <View style={styles.RouteName}>
-                            <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                <Icon
+                    <View style={{ justifyContent: 'flex-start', marginTop: 30 }}>
+                        <View style={[styles.RouteName, { borderBottomWidth: 0 }]}>
+                            <View style={{ alignItems: 'center', marginRight: 10 }}>
+                                <EvilIcons
                                     size={25}
+                                    color={'#007e85'}
                                     style={styles.drawerIcons}
-                                    name={'settings'}
+                                    name={'close'}
                                 />
                             </View>
                         </View>
                     </View>
                     <View style={styles.drawerRoutes}>
-
                         <TouchableOpacity onPress={() => this.addServices()}>
-                            <View style={styles.RouteName}>
-                                <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                    <Icon
-                                        size={25}
+                            <View style={[styles.RouteName, { borderTopWidth: 1, borderTopColor: '#00bac4' }]}>
+                                <View style={{ alignSelf: 'center', marginRight: 20 }}>
+                                    <FontAwesome
+                                        color={'#007e85'}
+                                        size={20}
                                         style={styles.drawerIcons}
-                                        name={'settings'}
+                                        name={'user'}
                                     />
                                 </View>
                                 <View style={{ alignSelf: 'center' }}>
-                                    <Text style={{ fontSize: 18, color: 'white' }}>
+                                    <Text style={{ fontSize: 17, color: 'white' }}>
                                         Min Konto
                                 </Text>
                                 </View>
@@ -91,15 +94,16 @@ class DrawerContent extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => this.MyProfile()}>
                             <View style={styles.RouteName}>
-                                <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                    <Icon
-                                        size={25}
+                                <View style={{ alignSelf: 'center', marginRight: 20 }}>
+                                    <FontAwesome
+                                        size={20}
+                                        color={'#007e85'}
                                         style={styles.drawerIcons}
-                                        name={'settings'}
+                                        name={'plus-circle'}
                                     />
                                 </View>
                                 <View style={{ alignSelf: 'center' }}>
-                                    <Text style={{ fontSize: 18, color: 'white' }}>
+                                    <Text style={{ fontSize: 17, color: 'white' }}>
                                         Tilfo/fjern en P-plads
                                 </Text>
                                 </View>
@@ -109,34 +113,36 @@ class DrawerContent extends Component {
 
                         <TouchableOpacity onPress={() => this.messages()}>
                             <View style={styles.RouteName}>
-                                <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                    <Icon
-                                        size={25}
+                                <View style={{ alignSelf: 'center', marginRight: 20 }}>
+                                    <FontAwesome
+                                        size={20}
+                                        color={'#007e85'}
                                         style={styles.drawerIcons}
-                                        name={'chat'}
+                                        name={'briefcase'}
                                     />
                                 </View>
                                 <View style={{ alignSelf: 'center' }}>
-                                    <Text style={{ fontSize: 18, color: 'white' }}>
+                                    <Text style={{ fontSize: 17, color: 'white' }}>
                                         Om Handikapp
                                 </Text>
                                 </View>
                             </View>
                         </TouchableOpacity>
-                      
+
                     </View>
                     <View style={{ justifyContent: 'flex-end' }}>
-                    <TouchableOpacity onPress={() => this.Logout()}>
+                        <TouchableOpacity onPress={() => this.Logout()}>
                             <View style={styles.logout}>
-                                <View style={{ alignSelf: 'center', marginRight: 10 }}>
-                                    <Icon
-                                        size={25}
+                                <View style={{ alignSelf: 'center', marginRight: 20 }}>
+                                    <FontAwesome
+                                        size={20}
+                                        color={'#007e85'}
                                         style={styles.drawerIcons}
-                                        name={'lock'}
+                                        name={'sign-out'}
                                     />
                                 </View>
                                 <View style={{ alignSelf: 'center' }}>
-                                    <Text style={{ fontSize: 18, color: 'white' }}>
+                                    <Text style={{ fontSize: 17, color: 'white' }}>
                                         Log ud
                                 </Text>
                                 </View>
@@ -150,10 +156,6 @@ class DrawerContent extends Component {
 }
 
 const styles = StyleSheet.create({
-    drawerIcons: {
-        width: 30,
-        height: 30,
-    },
     avatar: {
         paddingTop: 5,
         width: '100%',
@@ -169,8 +171,10 @@ const styles = StyleSheet.create({
     RouteName: {
         flexDirection: 'row',
         // borderWidth: 2,
-        paddingVertical: 10,
+        paddingVertical: 18,
         paddingHorizontal: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#00bac4'
     },
     logout: {
         flexDirection: 'row',
@@ -178,17 +182,16 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
         marginTop: 40,
-        marginBottom:20
-        
+        marginBottom: 20
+
     }
     ,
     drawerRoutes: {
         flex: 1,
         width: '100%',
-        paddingVertical: 10,
-        // borderWidth: 2,
-        // alignItems:'center'
-        justifyContent: 'center'
+        paddingVertical: 60,
+        paddingHorizontal: 5
+        // justifyContent: 'center'
     },
     name: {
         paddingVertical: 15,
