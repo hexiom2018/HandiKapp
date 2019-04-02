@@ -4,10 +4,14 @@ import FirstScreen from '../src/screens/firstScreen/loading'
 import LogIn from '../src/screens/login/login'
 import Parking from '../src/screens/parking/Parking';
 import SignUp from '../src/screens/signUp/SignUp';
+import Profile from '../src/screens/profile/Profile';
 
 
 const StackNavigator = createStackNavigator({
 
+    Profile: {
+        screen: Profile
+    },
     FirstScreen: {
         screen: FirstScreen
     },
