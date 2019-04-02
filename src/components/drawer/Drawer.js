@@ -35,7 +35,7 @@ class DrawerContent extends Component {
         }
     }
 
-   
+
 
     Logout() {
         this.props.logout()
@@ -55,8 +55,12 @@ class DrawerContent extends Component {
         const { data } = this.state
         return (
             <View style={styles.container}>
-                <View style={styles.drawerRoutes}>
-                    <TouchableOpacity onPress={() => this.Home()}>
+                <LinearGradient
+                    colors={['#2fd3ce', '#008cdb']}
+                    style={{ flex: 1 }}
+                    
+                >
+                    <View style={{ justifyContent: 'flex-start', marginTop:20 }}>
                         <View style={styles.RouteName}>
                             <View style={{ alignSelf: 'center', marginRight: 10 }}>
                                 <Icon
@@ -135,10 +139,11 @@ class DrawerContent extends Component {
                                     <Text style={{ fontSize: 18, color: 'white' }}>
                                         Log ud
                                 </Text>
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                        </TouchableOpacity>
+                    </View>
+                </LinearGradient>
             </View>
         );
     }
@@ -167,11 +172,23 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
     },
+    logout: {
+        flexDirection: 'row',
+        // borderWidth: 2,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        marginTop: 40,
+        marginBottom:20
+        
+    }
+    ,
     drawerRoutes: {
         flex: 1,
         width: '100%',
         paddingVertical: 10,
         // borderWidth: 2,
+        // alignItems:'center'
+        justifyContent: 'center'
     },
     name: {
         paddingVertical: 15,
