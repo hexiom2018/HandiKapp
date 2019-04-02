@@ -16,10 +16,6 @@ export default class AppHeader extends React.Component {
         } else {
             back('Parkering')
         }
-        // if (back) {
-        //     this.props.goBack()
-        // } else {
-        // }
     }
 
     render() {
