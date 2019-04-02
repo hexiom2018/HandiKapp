@@ -27,6 +27,7 @@ class Parking extends React.Component {
     }
     
     static navigationOptions = { header: null }
+    
     render() {
         const { title, backBtn } = this.state
         return (
