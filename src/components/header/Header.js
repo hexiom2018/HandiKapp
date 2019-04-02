@@ -1,6 +1,6 @@
 import React from 'react';
-import { Header } from 'react-native-elements';
-import { View, StyleSheet } from 'react-native';
+import { Header, Icon } from 'react-native-elements';
+import { View, StyleSheet, Text } from 'react-native';
 
 
 export default class AppHeader extends React.Component {
@@ -18,18 +18,43 @@ export default class AppHeader extends React.Component {
         }
     }
 
+    centerComponent() {
+        return (
+            <View style={styles.header}>
+                <View style={{ marginRight: 5 }}>
+                    <Icon
+                        color={'#fff'}
+                        name={'person'}
+                        size={24}
+                    />
+                </View>
+                <View>
+                    <Text style={{ fontSize: 18, color: '#fff' }}>
+                        Min konto
+                </Text>
+                </View>
+            </View>
+        )
+    }
+
     render() {
-        const { children, headerTitle } = this.props
+        const { children, headerTitle, icon, IconName } = this.props
 
         return (
             <View style={{ flex: 1 }}>
                 <View>
                     <Header
                         placement='center'
-                        centerComponent={{
-                            text: headerTitle,
-                            style: { color: '#fff', fontSize: 18, fontWeight: '400' }
-                        }}
+                        containerStyle={{ height: 100 }}
+                        centerComponent={
+                            icon ?
+                                this.centerComponent()
+                                :
+                                {
+                                    text: headerTitle,
+                                    style: { color: '#fff', fontSize: 18, fontWeight: '400' }
+                                }
+                        }
 
                         leftComponent={{
                             icon: headerTitle === 'Parkering' ? 'menu' : 'arrow-back',
@@ -50,8 +75,6 @@ export default class AppHeader extends React.Component {
 
 const styles = StyleSheet.create({
     header: {
-        // backgroundColor: '#060606'
-        // justifyContent: 'space-around',
-
+        flexDirection: 'row'
     }
 })
