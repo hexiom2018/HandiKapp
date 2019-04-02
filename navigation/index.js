@@ -9,14 +9,14 @@ import Profile from '../src/screens/profile/Profile';
 
 const StackNavigator = createStackNavigator({
 
-    Profile: {
-        screen: Profile
-    },
     FirstScreen: {
         screen: FirstScreen
     },
     LogIn: {
         screen: LogIn
+    },
+    Profile: {
+        screen: Profile
     },
     SignUp: {
         screen: SignUp
