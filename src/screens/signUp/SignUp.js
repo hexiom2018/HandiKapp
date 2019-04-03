@@ -41,13 +41,10 @@ const customStyles = {
 }
 
 const radioGroupList = [{
-    // label: 'Car',
     value: 'ordinary'
 }, {
-    // label: 'Bike',
     value: 'side luggage'
 }, {
-    // label: 'Bus',
     value: 'luggage'
 }];
 
@@ -294,6 +291,7 @@ class SignUp extends React.Component {
                                         color={true}
                                         border={true}
                                         name={'Næste'}
+                                        icon={true}
                                         buttonAction={() => this.nextPage()}
                                         textColor={'#4419e7'}
                                     />
@@ -301,6 +299,7 @@ class SignUp extends React.Component {
                                     <Button
                                         color={true}
                                         border={true}
+                                        icon={true}
                                         name={'Opret bruger'}
                                         background={true}
                                         buttonAction={() => this.signUp()}

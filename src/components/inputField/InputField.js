@@ -15,7 +15,7 @@ class InputField extends React.Component {
     }
 
     render() {
-        const { name, label, type, placeholder, value, fontAwesome,PlaceholderColor,TextColor,iconColor} = this.props
+        const { name, label, type, placeholder, secure, value, fontAwesome, PlaceholderColor, TextColor, iconColor } = this.props
         return (
             <View style={styles.form}>
                 <View style={styles.label}>
@@ -36,7 +36,7 @@ class InputField extends React.Component {
                         }
                     </View>
                     <View style={{ alignSelf: 'center' }}>
-                        <Text style={{ fontSize: 17, fontWeight: '500', color:TextColor }}>
+                        <Text style={{ fontSize: 17, fontWeight: '500', color: TextColor }}>
                             {label}
                         </Text>
                     </View>
@@ -45,8 +45,8 @@ class InputField extends React.Component {
                     <TextInput
                         keyboardType={type}
                         style={styles.input}
-                        // value={value}
-                        secureTextEntry={secure}
+                        value={value ? value : null}
+                        secureTextEntry={secure ? secure : false}
                         placeholder={placeholder}
                         onChangeText={(text) => this.props.change(text)}
                         placeholderTextColor={PlaceholderColor}
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         borderRadius: 4,
         borderColor: 'lightgrey',
-        backgroundColor:'white'
+        backgroundColor: 'white'
     }
 })
 

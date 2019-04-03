@@ -5,6 +5,7 @@ import LogIn from '../src/screens/login/login'
 import Parking from '../src/screens/parking/Parking';
 import SignUp from '../src/screens/signUp/SignUp';
 import Profile from '../src/screens/profile/Profile';
+import AddParking from '../src/screens/addParking/AddParking';
 
 
 const StackNavigator = createStackNavigator({
@@ -15,11 +16,14 @@ const StackNavigator = createStackNavigator({
     LogIn: {
         screen: LogIn
     },
+    SignUp: {
+        screen: SignUp
+    },
     Profile: {
         screen: Profile
     },
-    SignUp: {
-        screen: SignUp
+    AddParking: {
+        screen: AddParking
     },
     Parking: {
         screen: Parking
