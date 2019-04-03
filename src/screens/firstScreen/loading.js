@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import firebase from 'firebase';
 import Splashh from '../../../assets/Splashh.jpg';
 import { StackActions, NavigationActions } from 'react-navigation';
-import { current_User } from '../../Store/actions/authAction';
+import { FetchPlaces } from '../../Store/actions/FetchData';
 class FirstScreen extends React.Component {
     constructor(props) {
         super(props)
@@ -18,6 +18,7 @@ class FirstScreen extends React.Component {
                 // console.log(user, '======');
                 const currentUser = user
                 // this.props.user(currentUser)
+                this.props.places()
                 const resetAction = StackActions.reset({
                     index: 0,
                     actions: [
@@ -58,8 +59,8 @@ function mapStateToProps(states) {
 
 function mapDispatchToProps(dispatch) {
     return ({
-        user: (currentUser) => {
-            dispatch(current_User(currentUser))
+        places: () => {
+            dispatch(FetchPlaces())
         },
     })
 }
