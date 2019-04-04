@@ -19,7 +19,19 @@ export function userAuth() {
                         }
                     })
 
+                    db.ref('user').on('child_changed', (snapShot) => {
+                        if (snapShot.val().userUid === uid) {
+                            dispatch({ type: actionTypes.USER, payload: snapShot.val() })
+                        }
+                    })
+
                     db.ref('vehicle').on('child_added', (snapShot) => {
+                        if (snapShot.val().userUid === uid) {
+                            dispatch({ type: actionTypes.VEHICLE, payload: snapShot.val() })
+                        }
+                    })
+
+                    db.ref('vehicle').on('child_changed', (snapShot) => {
                         if (snapShot.val().userUid === uid) {
                             dispatch({ type: actionTypes.VEHICLE, payload: snapShot.val() })
                         }
@@ -63,12 +75,12 @@ export function UserSignUp(obj) {
                 let data = {
                     email,
                     mobile: obj.number,
+                    handicapParkingCard: obj.disabledPark,
                     userUid: user.user.uid
                 }
                 let vehicle = {
                     reg: obj.register,
                     type: obj.radio,
-                    disabled: obj.disabledPark,
                     userUid: user.user.uid
                 }
                 db.ref('/user').push(data)
@@ -85,3 +97,23 @@ export function UserSignUp(obj) {
     }
 }
 
+
+export function UpdateUserProfile(items, userUid) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            db.ref('user').on('child_added', (snapShot) => {
+                db.ref('user/' + snapShot.key).update({
+                    mobile: items.number,
+                    handicapParkingCard: items.disabledPark,
+                })
+            })
+
+            db.ref('vehicle').on('child_added', (snapShot) => {
+                db.ref('vehicle/' + snapShot.key).update({
+                    reg: items.register,
+                    type: items.radio,
+                })
+            })
+        })
+    }
+}

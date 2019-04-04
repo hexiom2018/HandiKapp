@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-// import { UserSignUp } from '../../Store/actions/authAction'
+import { UpdateUserProfile } from '../../Store/actions/authAction'
 // import BackIcon from '../../../assets/back.png'
 // import StepIndicator from 'react-native-step-indicator';
 // import Button from '../../components/button/Button';
@@ -69,13 +69,16 @@ class Profile extends React.Component {
 
     componentWillMount() {
         const { user, vehicle } = this.props
+        console.log(user, 'user here')
+        console.log(vehicle, 'vehicle here')
 
+        console.log('user')
         if (user) {
             if (vehicle) {
                 this.setState({
                     number: user.mobile,
                     register: vehicle.reg,
-                    disabledPark: vehicle.disabled,
+                    disabledPark: user.handicapParkingCard,
                     radio: vehicle.type
                 })
             }
@@ -85,13 +88,14 @@ class Profile extends React.Component {
 
     componentWillReceiveProps(props) {
         const { user, vehicle } = props
-
+        console.log(user, 'user here')
+        console.log(vehicle, 'vehicle here')
         if (user) {
             if (vehicle) {
                 this.setState({
                     number: user.mobile,
                     register: vehicle.reg,
-                    disabledPark: vehicle.disabled,
+                    disabledPark: user.handicapParkingCard,
                     radio: vehicle.type
                 })
             }
@@ -112,12 +116,15 @@ class Profile extends React.Component {
         const { number, register, disabledPark, radio } = this.state
 
         if (number && register && disabledPark && radio) {
+            const { UpdateUserProfile } = this.props.actions
+            const { user } = this.props
             var obj = {
                 number,
                 register,
                 disabledPark,
                 radio
             }
+            UpdateUserProfile(obj, user.userUid)
             console.log(obj, 'obj')
         }
     }
@@ -176,7 +183,6 @@ class Profile extends React.Component {
                                         <RadioGroup
                                             containerStyle={{ flexDirection: 'column' }}
                                             radioGroupList={radioGroupList}
-
                                             onChange={(radio) => this.setState({ radio })}
                                             buttonContainerActiveStyle={{ backgroundColor: '#2089dc', borderWidth: 2, borderColor: 'lightgrey' }}
                                             buttonContainerStyle={{ width: 35, marginVertical: 5 }}
@@ -274,7 +280,7 @@ function mapStateToProps(states) {
 function mapDispatchToProps(dispatch) {
     return ({
         actions: bindActionCreators({
-            // UserSignUp
+            UpdateUserProfile
         }, dispatch)
     })
 }

@@ -43,9 +43,9 @@ const customStyles = {
 const radioGroupList = [{
     value: 'ordinary'
 }, {
-    value: 'side luggage'
+    value: 'side Load'
 }, {
-    value: 'luggage'
+    value: 'back Load'
 }];
 
 class SignUp extends React.Component {
@@ -97,6 +97,12 @@ class SignUp extends React.Component {
 
     }
 
+    goBack() {
+        const { navigate } = this.props.navigation
+
+        navigate('LogIn')
+    }
+
     onChange(value, text) {
         this.setState({
             [text]: value
@@ -104,15 +110,14 @@ class SignUp extends React.Component {
     }
 
     nextPage() {
-        const { email, number, password, againPassword, currentPosition } = this.state
+        const { email, number, password, againPassword } = this.state
 
-        this.setState({ currentPosition: currentPosition + 1 })
 
         if (email && number && password && againPassword) {
             if (password !== againPassword) {
                 this.setState({
                     alert: true,
-                    text: 'Password does not match'
+                    text: 'adgangskoden passer ikke'
                 })
             } else {
                 const { currentPosition } = this.state
@@ -121,7 +126,7 @@ class SignUp extends React.Component {
         } else {
             this.setState({
                 alert: true,
-                text: 'Please fill all fields'
+                text: 'Udfyld venligst alle felter'
             })
         }
     }
@@ -164,7 +169,7 @@ class SignUp extends React.Component {
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled>
                 <View>
                     <View style={styles.header}>
-                        <TouchableOpacity activeOpacity={0.7}>
+                        <TouchableOpacity onPress={() => this.goBack()} activeOpacity={0.7}>
                             <View style={styles.Icon}>
                                 <Image
                                     style={{ width: '100%', height: '100%' }}
@@ -246,7 +251,7 @@ class SignUp extends React.Component {
                                             containerStyle={{ flexDirection: 'column' }}
                                             radioGroupList={radioGroupList}
                                             onChange={(radio) => this.setState({ radio })}
-                                            buttonContainerActiveStyle={{ backgroundColor: '#4419e7', borderWidth: 2, borderColor: 'lightgrey' }}
+                                            buttonContainerActiveStyle={{ backgroundColor: '#2089dc', borderWidth: 2, borderColor: 'lightgrey' }}
                                             buttonContainerStyle={{ width: 35, marginVertical: 5 }}
                                             buttonContainerInactiveStyle={{ borderWidth: 2, borderColor: 'lightgrey' }}
                                         />

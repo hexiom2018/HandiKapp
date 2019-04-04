@@ -9,21 +9,21 @@ import AddParking from '../src/screens/addParking/AddParking';
 
 
 const StackNavigator = createStackNavigator({
-
+    
     FirstScreen: {
         screen: FirstScreen
-    },
-    LogIn: {
-        screen: LogIn
     },
     SignUp: {
         screen: SignUp
     },
-    Profile: {
-        screen: Profile
-    },
     AddParking: {
         screen: AddParking
+    },
+    LogIn: {
+        screen: LogIn
+    },
+    Profile: {
+        screen: Profile
     },
     Parking: {
         screen: Parking
