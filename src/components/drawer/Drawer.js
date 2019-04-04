@@ -51,7 +51,17 @@ class DrawerContent extends Component {
         this.props.navigation.dispatch(resetAction)
     }
 
+    myProfile() {
+        const { navigation } = this.props
 
+        navigation.navigate('Profile')
+    }
+
+    addParking() {
+        const { navigation } = this.props
+
+        navigation.navigate('AddParking')
+    }
 
     render() {
         const { data } = this.state
@@ -62,20 +72,22 @@ class DrawerContent extends Component {
                     style={{ flex: 1 }}
 
                 >
-                    <View style={{ justifyContent: 'flex-start', marginTop: 30 }}>
-                        <View style={[styles.RouteName, { borderBottomWidth: 0 }]}>
-                            <View style={{ alignItems: 'center', marginRight: 10 }}>
-                                <EvilIcons
-                                    size={25}
-                                    color={'#007e85'}
-                                    style={styles.drawerIcons}
-                                    name={'close'}
-                                />
+                    <TouchableOpacity>
+                        <View style={{ justifyContent: 'flex-start', marginTop: 30 }}>
+                            <View style={[styles.RouteName, { borderBottomWidth: 0 }]}>
+                                <View style={{ alignItems: 'center', marginRight: 10 }}>
+                                    <EvilIcons
+                                        size={25}
+                                        color={'#007e85'}
+                                        style={styles.drawerIcons}
+                                        name={'close'}
+                                    />
+                                </View>
                             </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                     <View style={styles.drawerRoutes}>
-                        <TouchableOpacity onPress={() => this.addServices()}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => this.myProfile()}>
                             <View style={[styles.RouteName, { borderTopWidth: 1, borderTopColor: '#00bac4' }]}>
                                 <View style={{ alignSelf: 'center', marginRight: 20 }}>
                                     <FontAwesome
@@ -92,7 +104,7 @@ class DrawerContent extends Component {
                                 </View>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.MyProfile()}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => this.addParking()}>
                             <View style={styles.RouteName}>
                                 <View style={{ alignSelf: 'center', marginRight: 20 }}>
                                     <FontAwesome
@@ -111,7 +123,7 @@ class DrawerContent extends Component {
                         </TouchableOpacity>
 
 
-                        <TouchableOpacity onPress={() => this.messages()}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => this.messages()}>
                             <View style={styles.RouteName}>
                                 <View style={{ alignSelf: 'center', marginRight: 20 }}>
                                     <FontAwesome
@@ -131,7 +143,7 @@ class DrawerContent extends Component {
 
                     </View>
                     <View style={{ justifyContent: 'flex-end' }}>
-                        <TouchableOpacity onPress={() => this.Logout()}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => this.Logout()}>
                             <View style={styles.logout}>
                                 <View style={{ alignSelf: 'center', marginRight: 20 }}>
                                     <FontAwesome
