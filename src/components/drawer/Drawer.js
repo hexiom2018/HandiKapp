@@ -43,7 +43,6 @@ class DrawerContent extends Component {
 
     Logout() {
         const { Log_Out } = this.props.actions
-
         Log_Out().then(() => {
         const resetAction = StackActions.reset({
             index: 0,
@@ -53,7 +52,6 @@ class DrawerContent extends Component {
         })
         this.props.navigation.dispatch(resetAction)
     }).catch(() => {
-      
     })
     }
 
@@ -74,7 +72,8 @@ class DrawerContent extends Component {
         return (
             <View style={styles.container}>
                 <LinearGradient
-                    colors={['#03b8b7', '#0093d0']}
+                    // colors={['#03b8b7', '#0093d0']}
+                    colors={['#3fd6d1','#00abbf', '#0189dd']}
                     style={{ flex: 1 }}
 
                 >
