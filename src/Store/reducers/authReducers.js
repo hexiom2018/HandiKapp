@@ -3,8 +3,7 @@ import actionTypes from '../Constant/Constant'
 const INITIAL_STATE = {
     UID: null,
     USER: null,
-    ALLUSER: null,
-
+    VEHICLE: null
 }
 
 export default (states = INITIAL_STATE, action) => {
@@ -19,10 +18,10 @@ export default (states = INITIAL_STATE, action) => {
                 ...states,
                 USER: action.payload
             })
-        case 'ALLUSER':
+        case 'VEHICLE':
             return ({
                 ...states,
-                ALLUSER: action.payload
+                VEHICLE: action.payload
             })
         default:
             return states;

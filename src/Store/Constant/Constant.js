@@ -1,7 +1,7 @@
 const actionTypes = {
     UID: "UID",
     USER: "USER",
-    ALLUSER: 'ALLUSER',
+    VEHICLE: 'VEHICLE'
 }
 
 export default actionTypes;

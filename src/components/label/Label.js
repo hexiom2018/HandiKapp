@@ -5,7 +5,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, } from 'react-nati
 import IconFont from 'react-native-vector-icons/FontAwesome'
 
 
-class InputField extends React.Component {
+class Label extends React.Component {
     constructor(props) {
         super(props);
 
@@ -15,7 +15,7 @@ class InputField extends React.Component {
     }
 
     render() {
-        const { name, label, type, placeholder, secure, value, fontAwesome, PlaceholderColor, TextColor, iconColor } = this.props
+        const { name, label, fontAwesome, TextColor, iconColor } = this.props
         return (
             <View style={styles.form}>
                 <View style={styles.label}>
@@ -40,17 +40,6 @@ class InputField extends React.Component {
                             {label}
                         </Text>
                     </View>
-                </View>
-                <View style={styles.field}>
-                    <TextInput
-                        keyboardType={type}
-                        style={styles.input}
-                        value={value ? value : null}
-                        secureTextEntry={secure ? secure : false}
-                        placeholder={placeholder}
-                        onChangeText={(text) => this.props.change(text)}
-                        placeholderTextColor={PlaceholderColor}
-                    />
                 </View>
             </View>
         )
@@ -79,4 +68,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default InputField
+export default Label
