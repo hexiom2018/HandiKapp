@@ -16,6 +16,8 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import ServiceIcon from '../../../assets/services.png'
 import { LinearGradient } from 'expo';
+import { Log_Out } from '../../Store/actions/authAction'
+
 class DrawerContent extends Component {
     constructor() {
         super()
@@ -40,15 +42,19 @@ class DrawerContent extends Component {
 
 
     Logout() {
-        this.props.logout()
+        const { Log_Out } = this.props.actions
 
+        Log_Out().then(() => {
         const resetAction = StackActions.reset({
             index: 0,
             actions: [
-                NavigationActions.navigate({ routeName: 'Login' }),
+                NavigationActions.navigate({ routeName: 'LogIn' }),
             ]
         })
         this.props.navigation.dispatch(resetAction)
+    }).catch(() => {
+      
+    })
     }
 
     myProfile() {
@@ -72,7 +78,7 @@ class DrawerContent extends Component {
                     style={{ flex: 1 }}
 
                 >
-                    <TouchableOpacity>
+                    <TouchableOpacity  onPress={() => this.closeDrawer()}>
                         <View style={{ justifyContent: 'flex-start', marginTop: 30 }}>
                             <View style={[styles.RouteName, { borderBottomWidth: 0 }]}>
                                 <View style={{ alignItems: 'center', marginRight: 10 }}>
@@ -238,7 +244,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return ({
-
+        actions: bindActionCreators({
+            Log_Out
+        }, dispatch)
     })
 }
 
