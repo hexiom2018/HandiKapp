@@ -30,11 +30,13 @@ class Map extends React.Component {
             selectPlaceConfirm: false,
             exitParking: false,
             searchInput: true,
-            suggestion: false
+            suggestion: false,
+            marker: false
         }
     }
 
     componentDidMount() {
+
         if (!Constants.isDevice) {
             this.setState({
                 errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
@@ -45,6 +47,15 @@ class Map extends React.Component {
     }
 
     componentWillReceiveProps(props) {
+        const { Places } = props
+        var arr = []
+        if (Places) {
+            arr.push(Places)
+        }
+        if (arr && arr.length) {
+
+            this.setState({ Places: arr, marker: true })
+        }
         // const { backBtn } = props
         // if (backBtn === true) {
         //     this.setState({
@@ -70,6 +81,15 @@ class Map extends React.Component {
             get: true,
         });
     };
+
+    markerSelect(item) {
+        this.setState({
+            item,
+            selectPlace: true,
+            suggestion: false
+        })
+    }
+
     select(item) {
         const { title } = this.props
         title('Søgning')
@@ -101,8 +121,9 @@ class Map extends React.Component {
     }
 
     render() {
-        const { currentLocation, get, selectPlace, userLocation, search, item, exitParking, searchInput, suggestion, selectPlaceConfirm } = this.state
+        const { currentLocation, get, selectPlace, userLocation, search, item, exitParking, searchInput, suggestion, selectPlaceConfirm, Places, marker } = this.state
         const { backBtn } = this.props
+
         const coordinates = [
             {
                 latitude: currentLocation.lat,
@@ -130,18 +151,41 @@ class Map extends React.Component {
                                 longitudeDelta: LONGITUDE_DELTA,
                             }}
                         >
+                            {
+                                Places ?
+                                    Places.map((item, index) => {
+                                        console.log(item, '****Places****');
+                                        return (
+                                            <MapView.Marker
+                                                key={index}
+                                                onPress={() => this.markerSelect(item)}
+                                                coordinate={{
+                                                    latitude: item.coordinates.lat,
+                                                    longitude: item.coordinates.long,
+                                                }}
 
-                            <MapView.Marker
-                                coordinate={{
-                                    latitude: currentLocation.lat,
-                                    longitude: currentLocation.lng,
-                                }}
-                            >
-                                <Image
-                                    source={imgHandi}
-                                    style={{ width: 55, height: 78 }}
-                                />
-                            </MapView.Marker>
+                                            >
+                                                <Image
+                                                    source={imgHandi}
+                                                    style={{ width: 55, height: 78 }}
+                                                />
+                                            </MapView.Marker>
+                                        )
+                                    })
+                                    :
+                                    <MapView.Marker
+                                        coordinate={{
+                                            latitude: currentLocation.lat,
+                                            longitude: currentLocation.lng,
+                                        }}
+                                    >
+                                        <Image
+                                            source={imgHandi}
+                                            style={{ width: 55, height: 78 }}
+                                        />
+                                    </MapView.Marker>
+                            }
+
 
                             {/* <MapViewDirections
                             origin={coordinates[0]}
@@ -194,9 +238,9 @@ class Map extends React.Component {
                                         <Text onPress={() => this.setState({ selectPlace: false })}><Icon name='close' size={30} color='gray' /></Text>
                                     </View>
                                     <View style={{ marginBottom: 14, marginLeft: 20 }}>
-                                        <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{item.name}</Text>
-                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, }}>pakistan</Text>
-                                        <Text style={{ color: 'gray', paddingLeft: 16, fontSize: 12, }}>Talha</Text>
+                                        <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{'Valgt Iokalitet:'}</Text>
+                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, }}>{`${item.address.streetName} ${item.address.streetNr}, ${item.address.zipCode} ${item.address.city}`}</Text>
+                                        <Text style={{ color: 'gray', paddingLeft: 16, fontSize: 12, }}>time dikhan hai</Text>
                                     </View>
                                     <TouchableOpacity
                                         onPress={() => this.place()}
@@ -224,8 +268,8 @@ class Map extends React.Component {
                                         <Text onPress={() => this.setState({ selectPlaceConfirm: false, searchInput: true })}><Icon name='close' size={30} color='gray' /></Text>
                                     </View>
                                     <View style={{ marginBottom: 14, marginLeft: 20 }}>
-                                        <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{item.name}</Text>
-                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, }}>{'pakistan zindabad <3'}</Text>
+                                        <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{'PARKPARK A/S:'}</Text>
+                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, }}>{`${item.address.streetName} ${item.address.streetNr}, ${item.address.zipCode} ${item.address.city}`}</Text>
                                     </View>
                                     <TouchableOpacity
                                         onPress={() => this.confirm()}
@@ -261,8 +305,8 @@ class Map extends React.Component {
                                                 />
                                             </View>
                                             <View>
-                                                <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>Destination</Text>
-                                                <Text style={{ color: 'gray', paddingLeft: 10, fontSize: 18, }}>Square 12258 sq</Text>
+                                                <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>{'Destination  Nået'}</Text>
+                                                <Text style={{ color: 'gray', paddingLeft: 10, fontSize: 18, }}>{`${item.address.streetName} ${item.address.streetNr}, ${item.address.zipCode} ${item.address.city}`}</Text>
                                             </View>
                                         </View>
                                         <View style={{ marginLeft: 10, flexDirection: "row" }}>
@@ -273,7 +317,7 @@ class Map extends React.Component {
                                                 />
                                             </View>
                                             <View>
-                                                <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>Destination?</Text>
+                                                <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>{'Er pladsen optaget?'}</Text>
                                                 <Text style={{ color: '#0291d3', paddingLeft: 10, fontSize: 18, textDecorationLine: 'underline' }}>Square 12258 sq</Text>
                                             </View>
                                         </View>
@@ -386,7 +430,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(states) {
     return ({
         UID: states.authReducers.UID,
-        CurrentUser: states.authReducers.USER,
+        Places: states.authReducers.PLACES,
         alluser: states.authReducers.ALLUSER,
 
     })

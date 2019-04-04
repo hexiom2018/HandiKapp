@@ -4,7 +4,7 @@ const INITIAL_STATE = {
     UID: null,
     USER: null,
     ALLUSER: null,
-
+    PLACES: null,
 }
 
 export default (states = INITIAL_STATE, action) => {
@@ -23,6 +23,11 @@ export default (states = INITIAL_STATE, action) => {
             return ({
                 ...states,
                 ALLUSER: action.payload
+            })
+        case 'PLACES':
+            return ({
+                ...states,
+                PLACES: action.payload
             })
         default:
             return states;
