@@ -149,6 +149,13 @@ class SignUp extends React.Component {
                     alert: true,
                     text: 'Registrering med succes'
                 })
+                const resetAction = StackActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({ routeName: 'LogIn' }),
+                    ]
+                })
+                this.props.navigation.dispatch(resetAction)
             }).catch(() => {
                 this.setState({
                     alert: true,
