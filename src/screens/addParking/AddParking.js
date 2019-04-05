@@ -109,11 +109,13 @@ class AddParking extends React.Component {
 
         var obj = {
             address,
-            normal,
-            sideLoad,
-            backLoad,
-            toylet,
-            comments
+            parking: {
+                normal,
+                sideLoad,
+                backLoad,
+            },
+            toilet: toylet,
+            parkingComment: comments
         }
 
         console.log(obj, 'object')
