@@ -117,3 +117,12 @@ export function UpdateUserProfile(items, userUid) {
         })
     }
 }
+
+
+export function AddParkingSpace(items, userUid) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            db.ref('places')
+        })
+    }
+}

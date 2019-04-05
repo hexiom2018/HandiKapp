@@ -78,11 +78,11 @@ export default class AppHeader extends React.Component {
                         }}
                     />
                 </View>
-                <View style={{ flexGrow: 1 }}>
+                {/* <View style={{ flexGrow: 1 }}> */}
                     {
                         children
                     }
-                </View>
+                {/* </View> */}
             </View>
         )
     }

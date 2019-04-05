@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { AddParkingSpace } from '../../Store/actions/authAction'
 import InputField from '../../components/inputField/InputField';
 import AppHeader from '../../components/header/Header';
 import Button from '../../components/button/Button';
@@ -106,19 +107,28 @@ class AddParking extends React.Component {
 
     addParking() {
         const { address, normal, sideLoad, backLoad, toylet, comments } = this.state
-
+        const { AddParkingSpace } = this.props.actions
+        const { user } = this.props
         var obj = {
             address,
+            coordinates,
+            created: {
+                ...user,
+                timeStamp: Date.now()
+            },
             parking: {
-                normal,
-                sideLoad,
-                backLoad,
+                normal: normal ? normal : 0,
+                sideLoad: sideLoad ? sideLoad : 0,
+                backLoad: backLoad ? backLoad : 0,
             },
             toilet: toylet,
             parkingComment: comments
         }
 
-        console.log(obj, 'object')
+        AddParkingSpace(obj).then(() => {
+
+        })
+
     }
 
     render() {
@@ -131,79 +141,83 @@ class AddParking extends React.Component {
                 headerTitle={'tilføj plads'}
                 back={() => this.goBack()}
             >
-                <KeyboardAvoidingView style={{ flexGrow: 1, paddingVertical: 10 }} behavior={'padding'} enabled>
-                    <ScrollView style={{ flex: 1 }}>
-                        <View style={{ width: '100%', alignItems: 'center' }}>
-                            <InputField
-                                label={'Din placering'}
-                                name={'wheelchair'}
-                                type={'default'}
-                                placeholder={'Dit kortnr...'}
-                                value={address}
-                                fontAwesome={true}
-                                PlaceholderColor={'black'}
-                                iconColor={'grey'}
-                                change={(value) => this.onChange(value, 'address')}
-                            />
-                        </View>
-                        <View style={{ width: '100%', alignItems: 'center' }}>
-                            <Label
-                                label={'Antal handicap p-pladser'}
-                                name={'wheelchair'}
-                                fontAwesome={true}
-                                iconColor={'grey'}
-                            />
-                        </View>
-                        <View style={{ width: '100%', paddingVertical: 3, alignItems: 'center' }}>
-                            {
-                                fields &&
-                                fields.map((items, index) => {
-                                    return (
-                                        this.formField(items, index)
-                                    )
-                                })
-                            }
-                        </View>
-                        <View style={{ width: '100%', paddingVertical: 3, alignItems: 'center' }}>
-                            {
-                                toilet &&
-                                this.formField(toilet, 0)
-                            }
-                        </View>
-                        <View style={{ width: '100%', alignItems: 'center' }}>
-                            <Label
-                                label={'Kommentar til pladsen'}
-                                name={'wheelchair'}
-                                fontAwesome={true}
-                                iconColor={'grey'}
-                            />
-                        </View>
-                        <View style={{ width: '90%', alignItems: 'flex-end' }}>
-                            <TextInput
-                                multiline={true}
-                                style={{
-                                    borderWidth: 1,
-                                    width: '80%',
-                                    paddingHorizontal: 15,
-                                    borderColor: 'lightgrey',
-                                    borderRadius: 5,
-                                    height: 70
-                                }}
-                                value={comments}
-                                onChangeText={(text) => this.onChange(text, 'comments')}
-                            />
-                        </View>
-                        <View style={styles.button}>
-                            <Button
-                                color={true}
-                                border={true}
-                                name={'Gem ændringer'}
-                                background={true}
-                                buttonAction={() => this.addParking()}
-                                textColor={'white'}
-                            />
-                        </View>
-                    </ScrollView>
+                <KeyboardAvoidingView style={{ flex: 1, paddingVertical: 5 }} behavior={'padding'} enabled>
+                    <View>
+                        <ScrollView>
+                            <View>
+                                <View style={{ width: '100%', alignItems: 'center' }}>
+                                    <InputField
+                                        label={'Din placering'}
+                                        name={'wheelchair'}
+                                        type={'default'}
+                                        placeholder={'Dit kortnr...'}
+                                        value={address}
+                                        fontAwesome={true}
+                                        PlaceholderColor={'black'}
+                                        iconColor={'grey'}
+                                        change={(value) => this.onChange(value, 'address')}
+                                    />
+                                </View>
+                                <View style={{ width: '100%', alignItems: 'center' }}>
+                                    <Label
+                                        label={'Antal handicap p-pladser'}
+                                        name={'wheelchair'}
+                                        fontAwesome={true}
+                                        iconColor={'grey'}
+                                    />
+                                </View>
+                                <View style={{ width: '100%', paddingVertical: 3, alignItems: 'center' }}>
+                                    {
+                                        fields &&
+                                        fields.map((items, index) => {
+                                            return (
+                                                this.formField(items, index)
+                                            )
+                                        })
+                                    }
+                                </View>
+                                <View style={{ width: '100%', paddingVertical: 3, alignItems: 'center' }}>
+                                    {
+                                        toilet &&
+                                        this.formField(toilet, 0)
+                                    }
+                                </View>
+                                <View style={{ width: '100%', alignItems: 'center' }}>
+                                    <Label
+                                        label={'Kommentar til pladsen'}
+                                        name={'wheelchair'}
+                                        fontAwesome={true}
+                                        iconColor={'grey'}
+                                    />
+                                </View>
+                                <View style={{ width: '90%', alignItems: 'flex-end' }}>
+                                    <TextInput
+                                        multiline={true}
+                                        style={{
+                                            borderWidth: 1,
+                                            width: '80%',
+                                            paddingHorizontal: 15,
+                                            borderColor: 'lightgrey',
+                                            borderRadius: 5,
+                                            height: 70
+                                        }}
+                                        value={comments}
+                                        onChangeText={(text) => this.onChange(text, 'comments')}
+                                    />
+                                </View>
+                                <View style={styles.button}>
+                                    <Button
+                                        color={true}
+                                        border={true}
+                                        name={'Gem ændringer'}
+                                        background={true}
+                                        buttonAction={() => this.addParking()}
+                                        textColor={'white'}
+                                    />
+                                </View>
+                            </View>
+                        </ScrollView>
+                    </View>
                 </KeyboardAvoidingView>
             </AppHeader>
         )
@@ -235,7 +249,7 @@ function mapStateToProps(states) {
 function mapDispatchToProps(dispatch) {
     return ({
         actions: bindActionCreators({
-            // UserSignUp
+            AddParkingSpace
         }, dispatch)
     })
 }
