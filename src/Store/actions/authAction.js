@@ -117,3 +117,31 @@ export function UpdateUserProfile(items, userUid) {
         })
     }
 }
+
+
+export function AddParkingSpace(items, userUid) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            db.ref('places')
+        })
+    }
+}
+
+
+//LOgOut
+
+
+export function Log_Out() {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            firebase.auth().signOut()
+                .then((success) => {
+                    console.log(success);
+                    resolve()
+                })
+                .catch((error) => {
+                    reject()
+                })
+        })
+    }
+}

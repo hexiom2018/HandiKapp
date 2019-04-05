@@ -18,10 +18,6 @@ export default class AppHeader extends React.Component {
         } else {
             back('Parkering')
         }
-        // if (back) {
-        //     this.props.goBack()
-        // } else {
-        // }
     }
 
     centerComponent(title, iconName) {
@@ -114,12 +110,12 @@ export default class AppHeader extends React.Component {
                             onPress: () => this.menu()
                         }}
                     />
-                </View> */}
-                <View style={{ flexGrow: 1 }}>
+                </View>
+                {/* <View style={{ flexGrow: 1 }}> */}
                     {
                         children
                     }
-                </View>
+                {/* </View> */}
             </View>
         )
     }
