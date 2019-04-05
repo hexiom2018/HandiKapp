@@ -3,6 +3,7 @@ import firebase from '../../config/Firebase'
 
 var db = firebase.database()
 
+// Fetach places data
 export function FetchPlaces() {
     return dispatch => {
         var placesArr = [];
@@ -14,5 +15,14 @@ export function FetchPlaces() {
                 )
             }
         })
+    }
+}
+
+// Current Address
+export function currentAddress(obj) {
+    return dispatch => {
+        dispatch(
+            { type: actionTypes.CURRENTADDRESS, payload: obj }
+        )
     }
 }

@@ -10,6 +10,7 @@ import navigationIcon from '../../../assets/navigationIcon.png';
 import flagIcon from '../../../assets/flagIcon.png';
 import minusIcon from '../../../assets/minusIcon.png';
 import checkIcon from '../../../assets/checkIcon.png';
+import { currentAddress } from '../../Store/actions/FetchData'
 
 
 const { width, height } = Dimensions.get('window');
@@ -75,7 +76,22 @@ class Map extends React.Component {
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        console.log('currentLocation==>', location);
+        let address = Promise.resolve(Location.reverseGeocodeAsync(location.coords));
+        var that = this
+        address.then(function (value) {
+            let array = value.map(val => {
+                console.log('currentLocation==>', val);
+                var obj = {
+                    country: val.country,
+                    city: val.city,
+                    address: val.name,
+                    postalCode: val.postalCode,
+                    region: val.region,
+                    street: val.street
+                }
+                that.props._address(obj)
+            })
+        })
         this.setState({
             currentLocation: { lat: location.coords.latitude, lng: location.coords.longitude },
             get: true,
@@ -209,7 +225,7 @@ class Map extends React.Component {
                                     />
                                 </View>
                             }
-                            {suggestion &&
+                            {/* {suggestion &&
                                 arr.map((item, index) => {
                                     return (
                                         <View key={index} style={styles.view}>
@@ -229,7 +245,7 @@ class Map extends React.Component {
                                         </View>
                                     )
                                 })
-                            }
+                            } */}
                         </View>
                         {selectPlace &&
                             <View style={styles.bottomView}>
@@ -438,7 +454,9 @@ function mapStateToProps(states) {
 
 function mapDispatchToProps(dispatch) {
     return ({
-
+        _address: (obj) => {
+            dispatch(currentAddress(obj))
+        },
     })
 }
 

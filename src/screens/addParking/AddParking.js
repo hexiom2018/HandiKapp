@@ -55,6 +55,12 @@ class AddParking extends React.Component {
 
     }
 
+    componentDidMount() {
+        const { currentAddress } = this.props
+        console.log(currentAddress , 'Line no 60 Add parking');
+        
+    }
+
 
     goBack() {
         this.props.navigation.dispatch(NavigationActions.back())
@@ -227,6 +233,7 @@ function mapStateToProps(states) {
     return ({
         user: states.authReducers.USER,
         vehicle: states.authReducers.VEHICLE,
+        currentAddress: states.authReducers.CURRENTADDRESS,
     })
 }
 
