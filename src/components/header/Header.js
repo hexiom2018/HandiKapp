@@ -1,8 +1,9 @@
 import React from 'react';
 import { Header, Icon } from 'react-native-elements';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, StatusBar } from 'react-native';
 import IconFont from 'react-native-vector-icons/FontAwesome'
-
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { LinearGradient, Constants } from 'expo';
 
 export default class AppHeader extends React.Component {
     constructor(props) {
@@ -57,7 +58,43 @@ export default class AppHeader extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                <View>
+                <LinearGradient
+                    colors={['#0093d0', '#03b8b7']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                >
+                    <View style={styles.statusBar} />
+                    <View style={styles.customHeader}>
+                        <TouchableOpacity style={{ marginLeft: 12 }} onPress={() => this.menu()}>
+                            {
+                                headerTitle === 'Parkering' ?
+                                    <Ionicons
+                                        color={'#fff'}
+                                        name={'md-menu'}
+                                        size={30}
+                                    />
+                                    :
+                                    <Ionicons
+                                        color={'#fff'}
+                                        name={'ios-arrow-back'}
+                                        size={30}
+                                    />
+                            }
+                        </TouchableOpacity>
+                        <View>
+                            {
+                                icon ?
+                                    this.centerComponent(headerTitle, IconName)
+                                    :
+                                    <Text style={{ color: '#fff', fontSize: 18, fontWeight: '400' }}>{headerTitle}</Text>
+                            }
+                        </View>
+                        <View style={{ marginRight: 20 }}>
+
+                        </View>
+                    </View>
+                </LinearGradient>
+                {/* <View>
                     <Header
                         placement='center'
                         containerStyle={{ height: 80 }}
@@ -77,7 +114,7 @@ export default class AppHeader extends React.Component {
                             onPress: () => this.menu()
                         }}
                     />
-                </View>
+                </View> */}
                 <View style={{ flexGrow: 1 }}>
                     {
                         children
@@ -91,5 +128,16 @@ export default class AppHeader extends React.Component {
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row'
-    }
+    },
+    customHeader: {
+        width: '100%',
+        height: 60,
+        flexDirection: 'row',
+        alignItems: "center",
+        justifyContent: 'space-between'
+    },
+    statusBar: {
+        opacity: 0.2,
+        height: Constants.statusBarHeight,
+    },
 })
