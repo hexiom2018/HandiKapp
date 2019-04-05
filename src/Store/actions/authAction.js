@@ -126,3 +126,22 @@ export function AddParkingSpace(items, userUid) {
         })
     }
 }
+
+
+//LOgOut
+
+
+export function Log_Out() {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            firebase.auth().signOut()
+                .then((success) => {
+                    console.log(success);
+                    resolve()
+                })
+                .catch((error) => {
+                    reject()
+                })
+        })
+    }
+}
