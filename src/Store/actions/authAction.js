@@ -130,7 +130,6 @@ export function AddParkingSpace(items, userUid) {
 
 //LOgOut
 
-
 export function Log_Out() {
     return dispatch => {
         return new Promise(function (resolve, reject) {

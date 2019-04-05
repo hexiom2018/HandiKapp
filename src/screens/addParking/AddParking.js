@@ -58,8 +58,10 @@ class AddParking extends React.Component {
 
     componentDidMount() {
         const { currentAddress } = this.props
-        console.log(currentAddress , 'Line no 60 Add parking');
-        
+        console.log(currentAddress, 'Line no 60 Add parking');
+
+        this.setState({ currentAddress })
+
     }
 
 
@@ -112,11 +114,13 @@ class AddParking extends React.Component {
     }
 
     addParking() {
-        const { address, normal, sideLoad, backLoad, toylet, comments } = this.state
+        const { address, normal, sideLoad, backLoad, toylet, comments, currentAddress } = this.state
         const { AddParkingSpace } = this.props.actions
         const { user } = this.props
         var obj = {
-            address,
+            address: {
+                ...currentAddress
+            },
             coordinates,
             created: {
                 ...user,
