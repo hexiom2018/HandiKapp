@@ -82,12 +82,18 @@ class Map extends React.Component {
             let array = value.map(val => {
                 console.log('currentLocation==>', val);
                 var obj = {
-                    country: val.country,
-                    city: val.city,
-                    address: val.name,
-                    postalCode: val.postalCode,
-                    region: val.region,
-                    street: val.street
+                    address:{
+                        country: val.country,
+                        city: val.city,
+                        address: val.name,
+                        postalCode: val.postalCode,
+                        region: val.region,
+                        street: val.street,
+                    },
+                    coordinates: {
+                        lat: location.coords.latitude,
+                        lng: location.coords.longitude
+                    }
                 }
                 that.props._address(obj)
             })
