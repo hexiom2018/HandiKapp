@@ -11,7 +11,7 @@ export function FetchPlaces() {
             placesArr.push(snapShot.val())
             if (placesArr && placesArr.length) {
                 dispatch(
-                    { type: actionTypes.PLACES, payload: snapShot.val() }
+                    { type: actionTypes.PLACES, payload: placesArr }
                 )
             }
         })

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, Text, Image, StyleSheet, TouchableOpacity, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { View, TextInput, Text, Image, StyleSheet, TouchableOpacity, Dimensions, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Marker } from 'react-native-maps';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -48,23 +48,17 @@ class Map extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        const { Places } = props
-        var arr = []
-        if (Places) {
-            arr.push(Places)
+        const { Places, backBtn } = props
+        if (Places && Places.length) {
+            this.setState({ Places: Places, marker: true })
         }
-        if (arr && arr.length) {
-
-            this.setState({ Places: arr, marker: true })
+        if (backBtn === 'Parkering') {
+            this.setState({
+                selectPlace: false,
+                searchInput: true,
+                suggestion: false
+            })
         }
-        // const { backBtn } = props
-        // if (backBtn === true) {
-        //     this.setState({
-        //         selectPlace: false,
-        //         searchInput: true,
-        //         suggestion: false
-        //     })
-        // }
     }
 
     _getLocationAsync = async () => {
@@ -82,7 +76,7 @@ class Map extends React.Component {
             let array = value.map(val => {
                 console.log('currentLocation==>', val);
                 var obj = {
-                    address:{
+                    address: {
                         country: val.country,
                         city: val.city,
                         address: val.name,
@@ -118,7 +112,9 @@ class Map extends React.Component {
         this.setState({
             item,
             selectPlace: true,
-            suggestion: false
+            suggestion: false,
+            selectPlaceConfirm: false,
+            exitParking: false
         })
     }
     place() {
@@ -132,6 +128,12 @@ class Map extends React.Component {
         title('Parkering')
     }
 
+    closeDetail() {
+        const { title } = this.props
+        title('Parkering')
+        this.setState({ selectPlace: false })
+    }
+
     confirm() {
         const { title } = this.props
         this.setState({
@@ -143,8 +145,10 @@ class Map extends React.Component {
     }
 
     render() {
-        const { currentLocation, get, selectPlace, userLocation, search, item, exitParking, searchInput, suggestion, selectPlaceConfirm, Places, marker } = this.state
-        const { backBtn } = this.props
+        const {
+            currentLocation, get, selectPlace, userLocation, search, item, exitParking,
+            searchInput, suggestion, selectPlaceConfirm, Places, marker
+        } = this.state
 
         const coordinates = [
             {
@@ -176,11 +180,11 @@ class Map extends React.Component {
                             {
                                 Places ?
                                     Places.map((item, index) => {
-                                        console.log(item, '****Places****');
+
                                         return (
                                             <MapView.Marker
                                                 key={index}
-                                                onPress={() => this.markerSelect(item)}
+                                                onPress={() => this.select(item)}
                                                 coordinate={{
                                                     latitude: item.coordinates.lat,
                                                     longitude: item.coordinates.long,
@@ -231,10 +235,13 @@ class Map extends React.Component {
                                     />
                                 </View>
                             }
-                            {/* {suggestion &&
-                                arr.map((item, index) => {
+
+                            {    // search DropDown
+                                suggestion && marker &&
+                                Places.map((item, index) => {
+                                    // console.log(item, '****Places****');
                                     return (
-                                        <View key={index} style={styles.view}>
+                                        <ScrollView key={index} style={styles.view} scrollEnabled={false}>
                                             <View style={styles.border}></View>
                                             <TouchableOpacity
                                                 style={{ paddingTop: 15, paddingBottom: 15, }}
@@ -242,22 +249,24 @@ class Map extends React.Component {
                                             >
                                                 <View style={styles.searchListItem}>
                                                     <View>
-                                                        <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)' }} >{item.name}</Text>
-                                                        <Text style={{ fontSize: 10, color: '#0291d3' }} >karachi</Text>
+                                                        <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)' }} >{item.address.streetName}</Text>
+                                                        <Text style={{ fontSize: 10, color: '#0291d3' }} >{`${item.address.zipCode}, ${item.address.streetName} ${item.address.streetNr}, ${item.address.city}`}</Text>
                                                     </View>
                                                     <Text style={{ paddingRight: 8 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
                                                 </View>
                                             </TouchableOpacity>
-                                        </View>
+                                        </ScrollView>
                                     )
                                 })
-                            } */}
+                            }
                         </View>
-                        {selectPlace &&
+
+                        {   // place detail view with sogning header
+                            selectPlace &&
                             <View style={styles.bottomView}>
                                 <View style={styles.bottomDiv}>
                                     <View style={styles.closeBtn}>
-                                        <Text onPress={() => this.setState({ selectPlace: false })}><Icon name='close' size={30} color='gray' /></Text>
+                                        <Text onPress={() => this.closeDetail()}><Icon name='close' size={30} color='gray' /></Text>
                                     </View>
                                     <View style={{ marginBottom: 14, marginLeft: 20 }}>
                                         <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{'Valgt Iokalitet:'}</Text>
@@ -283,7 +292,9 @@ class Map extends React.Component {
                                 </View>
                             </View>
                         }
-                        {selectPlaceConfirm &&
+
+                        {   // confirm Parking View
+                            selectPlaceConfirm &&
                             <View style={styles.bottomView}>
                                 <View style={styles.bottomDiv}>
                                     <View style={styles.closeBtn}>
@@ -312,7 +323,9 @@ class Map extends React.Component {
                                 </View>
                             </View>
                         }
-                        {exitParking &&
+
+                        { // Exit Parking View
+                            exitParking &&
                             <View style={styles.bottomView}>
                                 <View style={styles.bottomDiv}>
                                     <View style={styles.closeBtn}>
