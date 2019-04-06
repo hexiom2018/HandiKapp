@@ -58,8 +58,22 @@ class AddParking extends React.Component {
 
     componentDidMount() {
         const { currentAddress } = this.props
-        console.log(currentAddress , 'Line no 60 Add parking');
-        
+        if (currentAddress) {
+            this.setState({
+                currentAddress: currentAddress.address,
+                coordinates: currentAddress.coordinates
+            })
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        const { currentAddress } = props
+        if (currentAddress) {
+            this.setState({
+                currentAddress: currentAddress.address,
+                coordinates: currentAddress.coordinates
+            })
+        }
     }
 
 
@@ -112,33 +126,44 @@ class AddParking extends React.Component {
     }
 
     addParking() {
-        const { address, normal, sideLoad, backLoad, toylet, comments } = this.state
+        const { normal, sideLoad, backLoad, toylet, comments, currentAddress, coordinates } = this.state
         const { AddParkingSpace } = this.props.actions
         const { user } = this.props
-        var obj = {
-            address,
-            coordinates,
-            created: {
-                ...user,
-                timeStamp: Date.now()
-            },
-            parking: {
-                normal: normal ? normal : 0,
-                sideLoad: sideLoad ? sideLoad : 0,
-                backLoad: backLoad ? backLoad : 0,
-            },
-            toilet: toylet,
-            parkingComment: comments
+        if (currentAddress) {
+
+            var obj = {
+                address: {
+                    ...currentAddress
+                },
+                coordinates: {
+                    ...coordinates
+                },
+                created: {
+                    ...user,
+                    timeStamp: Date.now()
+                },
+                parking: {
+                    normal: normal ? normal : 0,
+                    sideLoad: sideLoad ? sideLoad : 0,
+                    backLoad: backLoad ? backLoad : 0,
+                },
+                toilet: toylet,
+                parkingComment: comments
+            }
+            console.log(obj, 'object')
+            AddParkingSpace(obj, user.userUid).then(() => {
+                console.log('data added')
+                this.setState({ text: 'med succes tilføje parkeringsplads', alert: true })
+
+            })
+        } else {
+            this.setState({ text: 'please enable your location', alert: true })
         }
-
-        AddParkingSpace(obj).then(() => {
-
-        })
 
     }
 
     render() {
-        const { fields, toilet, address, comments } = this.state
+        const { fields, toilet, address, comments, text } = this.state
         return (
             <AppHeader
                 icon={true}
@@ -224,6 +249,20 @@ class AddParking extends React.Component {
                             </View>
                         </ScrollView>
                     </View>
+                    {
+                        <Snackbar
+                            visible={this.state.alert}
+                            onDismiss={() => this.setState({ alert: false })}
+                            action={{
+                                label: 'Ok',
+                                onPress: () => {
+                                    // Do something
+                                },
+                            }}
+                        >
+                            {text}
+                        </Snackbar>
+                    }
                 </KeyboardAvoidingView>
             </AppHeader>
         )
