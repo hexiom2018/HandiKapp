@@ -79,14 +79,13 @@ class Map extends React.Component {
                     address: {
                         country: val.country,
                         city: val.city,
-                        address: val.name,
-                        postalCode: val.postalCode,
-                        region: val.region,
-                        street: val.street,
+                        streetName: val.name,
+                        zipCode: val.postalCode,
+                        streetNr: val.street,
                     },
                     coordinates: {
                         lat: location.coords.latitude,
-                        lng: location.coords.longitude
+                        long: location.coords.longitude
                     }
                 }
                 that.props._address(obj)
