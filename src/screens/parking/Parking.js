@@ -3,6 +3,9 @@ import { View, Text, TextInput, StyleSheet, StatusBar, TouchableOpacity } from '
 import { connect } from 'react-redux';
 import AppHeader from '../../components/header/Header';
 import Map from '../../components/map/Map';
+import { bindActionCreators } from 'redux';
+import { GetParkingSpace } from '../../Store/actions/authAction';
+
 
 
 class Parking extends React.Component {
@@ -13,6 +16,22 @@ class Parking extends React.Component {
         }
     }
 
+    componentWillMount() {
+        const { user } = this.props
+        const { GetParkingSpace } = this.props.actions
+        if (user) {
+            GetParkingSpace(user.userUid)
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        const { user } = props
+        const { GetParkingSpace } = this.props.actions
+
+        if (user) {
+            GetParkingSpace(user.userUid)
+        }
+    }
 
     titleHeader(title) {
         if (title === 'Søgning') {
@@ -47,12 +66,15 @@ class Parking extends React.Component {
 
 function mapStateToProps(states) {
     return ({
+        user: states.authReducers.USER,
     })
 }
 
 function mapDispatchToProps(dispatch) {
     return ({
-
+        actions: bindActionCreators({
+            GetParkingSpace
+        }, dispatch)
     })
 }
 

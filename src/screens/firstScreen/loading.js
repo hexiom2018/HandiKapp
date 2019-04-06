@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground,  ActivityIndicator, } from 'react-native';
+import { View, ImageBackground, ActivityIndicator, } from 'react-native';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import Splashh from '../../../assets/splash-screen/splash-image.png';
@@ -21,7 +21,7 @@ class FirstScreen extends React.Component {
 
         userAuth().then(() => {
 
-        this.props.places()
+            this.props.places()
             const resetAction = StackActions.reset({
                 index: 0,
                 actions: [
@@ -39,6 +39,7 @@ class FirstScreen extends React.Component {
                 })
                 this.props.navigation.dispatch(resetAction)
             })
+
     }
 
     static navigationOptions = { header: null }
@@ -50,13 +51,13 @@ class FirstScreen extends React.Component {
                     source={Splashh}
                     style={{ width: '100%', height: '100%' }}>
                     <LinearGradient
-                        colors={['#83E2DA','#7ACED2','#0199B0', '#0093d0']}
+                        colors={['#83E2DA', '#7ACED2', '#0199B0', '#0093d0']}
                         style={{ flex: 1 }}
                         opacity={0.7}
 
                     >
-                        <View style={{ flex: 1, justifyContent:'center'  }}>
-                        <ActivityIndicator size="large" color="#ffffff" />
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <ActivityIndicator size="large" color="#ffffff" />
                         </View>
                     </LinearGradient>
                 </ImageBackground>

@@ -132,6 +132,22 @@ export function AddParkingSpace(data, user) {
 }
 
 
+export function GetParkingSpace(user) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            db.ref('/places/'+user).on('child_added', (snapShot) => {
+                if(snapShot.exists) {
+                    console.log(snapShot.val(), 'snapshot value')
+                }else{
+                    console.log('nhi ha bhai')
+                }
+            })
+        })
+    }
+}
+
+
+
 //LOgOut
 
 export function Log_Out() {

@@ -11,6 +11,7 @@ import { AddParkingSpace } from '../../Store/actions/authAction'
 import InputField from '../../components/inputField/InputField';
 import AppHeader from '../../components/header/Header';
 import Button from '../../components/button/Button';
+import IconFont from 'react-native-vector-icons/FontAwesome'
 import { Snackbar } from 'react-native-paper'
 import Label from '../../components/label/Label';
 
@@ -46,7 +47,8 @@ class AddParking extends React.Component {
             toilet: {
                 name: 'Antal handicap toiletter',
                 icon: true,
-                iconName: 'person',
+                fontAwesome: true,
+                iconName: 'wheelchair',
                 iconColor: 'grey',
                 type: 'number-pad',
                 borderColor: 'lightgrey',
@@ -93,10 +95,18 @@ class AddParking extends React.Component {
                 <View style={{ alignSelf: 'center', width: 55 }}>
                     {
                         item.icon ?
-                            <Icon
-                                name={item.iconName}
-                                color={item.iconColor}
-                            />
+                            item.fontAwesome ?
+                                <IconFont
+                                    style={{ paddingLeft: 20 }}
+                                    size={25}
+                                    name={item.iconName}
+                                    color={item.iconColor}
+                                />
+                                :
+                                <Icon
+                                    name={item.iconName}
+                                    color={item.iconColor}
+                                />
                             :
                             null
                     }
@@ -179,7 +189,7 @@ class AddParking extends React.Component {
                                 <View style={{ width: '100%', alignItems: 'center' }}>
                                     <InputField
                                         label={'Din placering'}
-                                        name={'wheelchair'}
+                                        name={'map-marker'}
                                         type={'default'}
                                         placeholder={'Dit kortnr...'}
                                         value={address}
@@ -216,8 +226,7 @@ class AddParking extends React.Component {
                                 <View style={{ width: '100%', alignItems: 'center' }}>
                                     <Label
                                         label={'Kommentar til pladsen'}
-                                        name={'wheelchair'}
-                                        fontAwesome={true}
+                                        name={'chat'}
                                         iconColor={'grey'}
                                     />
                                 </View>

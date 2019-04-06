@@ -13,11 +13,11 @@ const StackNavigator = createStackNavigator({
     FirstScreen: {
         screen: FirstScreen
     },
-    SignUp: {
-        screen: SignUp
-    },
     AddParking: {
         screen: AddParking
+    },
+    SignUp: {
+        screen: SignUp
     },
     LogIn: {
         screen: LogIn
