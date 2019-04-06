@@ -6,30 +6,30 @@ import Map from '../../components/map/Map';
 
 
 class Parking extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             title: 'Parkering'
         }
     }
+
+
     titleHeader(title) {
         if (title === 'Søgning') {
-
             this.setState({ title: title })
         } else if (title === 'Parkering') {
-            console.log('back===back');
-            this.setState({ title: title, backBtn: true })
+            this.setState({ title: title })
         }
     }
-    
+
     openMenu() {
         this.props.navigation.openDrawer()
     }
-    
+
     static navigationOptions = { header: null }
-    
+
     render() {
-        const { title, backBtn } = this.state
+        const { title } = this.state
         return (
             <AppHeader
                 headerTitle={title}
@@ -37,7 +37,7 @@ class Parking extends React.Component {
                 back={(back) => this.titleHeader(back)}
             >
                 <Map
-                    backBtn={backBtn}
+                    backBtn={title}
                     title={(title) => this.titleHeader(title)}
                 />
             </AppHeader>
