@@ -120,16 +120,11 @@ class FirstScreen extends React.Component {
                         <TouchableOpacity onPress={() => this.setState({
                             isLocationModalVisible: false, openSetting: true
                         })}>
-                            <View style={{ backgroundColor: 'blue', alignItems: 'center' ,height:40,color:'white',justifyContent:'center'}}>
-                                <Text style={{color:'white'}}>
-                                    'Enabel Location Services'
+                            <View style={{ backgroundColor: '#7ACED2', alignItems: 'center' ,height:40,color:'white',justifyContent:'center'}}>
+                                <Text style={{color:'white',fontSize:18,}}>
+                                    'Aktivér Lokalitetstjenester'
                                 </Text>
                             </View></TouchableOpacity>
-                        {/* <Button title='Enabel Location Services' onPress={() => this.setState({
-                            isLocationModalVisible: false, openSetting: true
-                        })}>
-
-                        </Button> */}
                     </View>
                 </Modal>
                 <ImageBackground
