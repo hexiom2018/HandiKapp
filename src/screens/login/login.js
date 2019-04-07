@@ -4,13 +4,14 @@ import {
     , KeyboardAvoidingView,
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
-import Splashh from '../../../assets/Splashh.jpg'
+import Splashh from '../../../assets/splash-screen/splash-image.png'
 import { connect } from 'react-redux';
 import { Action } from '../../Store/actions/authAction'
 import { bindActionCreators } from 'redux';
 import InputField from '../../components/inputField/InputField';
 import Button from '../../components/button/Button';
 import { Snackbar } from 'react-native-paper'
+import { LinearGradient } from 'expo';
 
 class LogIn extends React.Component {
     constructor(props) {
@@ -47,6 +48,9 @@ class LogIn extends React.Component {
     }
     function = () => {
         this.props.navigation.navigate('ForgetPassword')
+    }
+    function2 = () => {
+        this.props.navigation.navigate('SignUp')
     }
     Login() {
         const { email, password, } = this.state
@@ -86,7 +90,13 @@ class LogIn extends React.Component {
 
         return (
             <ImageBackground source={Splashh} style={{ width: '100%', height: '100%' }}>
-                <KeyboardAvoidingView style={{ flexGrow: 1 }} behavior={'padding'} enabled>
+                <LinearGradient
+                        colors={['#83E2DA', '#7ACED2', '#0199B0', '#0093d0']}
+                        style={{ flex: 1 }}
+                        opacity={0.8}
+
+                    >
+                <KeyboardAvoidingView style={{ flex: 1 }}  behavior={'padding'} enabled>
                     <ScrollView style={{ flex: 1 }}>
 
                         <View style={{ flex: 1 }}>
@@ -142,7 +152,7 @@ class LogIn extends React.Component {
 
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        onPress={this.function}
+                                        onPress={this.function2}
                                         activeOpacity={0.7}
                                         style={[styles.button,
                                         ]}>
@@ -170,6 +180,7 @@ class LogIn extends React.Component {
                         </Snackbar>
                     </ScrollView>
                 </KeyboardAvoidingView>
+                </LinearGradient>
             </ImageBackground>
         );
     }
@@ -201,20 +212,23 @@ const styles = StyleSheet.create({
     button: {
         width: '100%',
         alignItems: 'center',
-        paddingVertical: 15
+        paddingVertical: 15,
+        opacity:1
     },
     form: {
         // borderWidth: 1,
         width: '100%',
         paddingVertical: 10,
         alignItems: 'center',
-        // justifyContent:'center'
-        marginTop: 90
+        opacity:1
+        
     },
     body: {
-        flex: 1,
+        // flex: 1,
         alignItems: "center",
         justifyContent: "center",
+        marginTop:70
+
     },
 });
 function mapStateToProps(states) {
