@@ -23,14 +23,14 @@ class FirstScreen extends React.Component {
 
         userAuth().then(() => {
 
-            // this.props.places()
-            // const resetAction = StackActions.reset({
-            //     index: 0,
-            //     actions: [
-            //         NavigationActions.navigate({ routeName: 'Parking' }),
-            //     ]
-            // })
-            // this.props.navigation.dispatch(resetAction)
+            this.props.places()
+            const resetAction = StackActions.reset({
+                index: 0,
+                actions: [
+                    NavigationActions.navigate({ routeName: 'Parking' }),
+                ]
+            })
+            this.props.navigation.dispatch(resetAction)
         })
             .catch(() => {
                 const resetAction = StackActions.reset({

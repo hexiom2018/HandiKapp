@@ -66,6 +66,11 @@ class DrawerContent extends Component {
 
         navigation.navigate('AddParking')
     }
+    About(){
+        const { navigation } = this.props
+        navigation.navigate('About')
+        console.log('about')
+    }
 
     render() {
         const { data } = this.state
@@ -128,7 +133,7 @@ class DrawerContent extends Component {
                         </TouchableOpacity>
 
 
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => this.messages()}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => this.About()}>
                             <View style={styles.RouteName}>
                                 <View style={{ alignSelf: 'center', marginRight: 20 }}>
                                     <FontAwesome
