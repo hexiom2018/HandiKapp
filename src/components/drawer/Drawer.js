@@ -17,7 +17,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import ServiceIcon from '../../../assets/services.png'
 import { LinearGradient } from 'expo';
 import { Log_Out } from '../../Store/actions/authAction'
-
+import logoutIcon from '../../../assets/logout.png'
 class DrawerContent extends Component {
     constructor() {
         super()
@@ -44,15 +44,15 @@ class DrawerContent extends Component {
     Logout() {
         const { Log_Out } = this.props.actions
         Log_Out().then(() => {
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [
-                NavigationActions.navigate({ routeName: 'LogIn' }),
-            ]
+            const resetAction = StackActions.reset({
+                index: 0,
+                actions: [
+                    NavigationActions.navigate({ routeName: 'LogIn' }),
+                ]
+            })
+            this.props.navigation.dispatch(resetAction)
+        }).catch(() => {
         })
-        this.props.navigation.dispatch(resetAction)
-    }).catch(() => {
-    })
     }
 
     myProfile() {
@@ -66,7 +66,7 @@ class DrawerContent extends Component {
 
         navigation.navigate('AddParking')
     }
-    About(){
+    About() {
         const { navigation } = this.props
         navigation.navigate('About')
         console.log('about')
@@ -78,11 +78,11 @@ class DrawerContent extends Component {
             <View style={styles.container}>
                 <LinearGradient
                     // colors={['#03b8b7', '#0093d0']}
-                    colors={['#3fd6d1','#00abbf', '#0189dd']}
+                    colors={['#3fd6d1', '#00abbf', '#0189dd']}
                     style={{ flex: 1 }}
 
                 >
-                    <TouchableOpacity  onPress={() => this.closeDrawer()}>
+                    <TouchableOpacity onPress={() => this.closeDrawer()}>
                         <View style={{ justifyContent: 'flex-start', marginTop: 30 }}>
                             <View style={[styles.RouteName, { borderBottomWidth: 0 }]}>
                                 <View style={{ alignItems: 'center', marginRight: 10 }}>
@@ -155,14 +155,12 @@ class DrawerContent extends Component {
                     <View style={{ justifyContent: 'flex-end' }}>
                         <TouchableOpacity activeOpacity={0.7} onPress={() => this.Logout()}>
                             <View style={styles.logout}>
-                                <View style={{ alignSelf: 'center', marginRight: 20 }}>
-                                    <FontAwesome
-                                        size={20}
-                                        color={'#007e85'}
-                                        style={styles.drawerIcons}
-                                        name={'sign-out'}
-                                    />
-                                </View>
+                                <View style={{ alignSelf: 'center', marginRight: 18 }}>
+                                        <Image
+                                            style={{ width: 20, height: 20 }}
+                                            source={logoutIcon}
+                                        />
+                                    </View>
                                 <View style={{ alignSelf: 'center' }}>
                                     <Text style={{ fontSize: 17, color: 'white' }}>
                                         Log ud
