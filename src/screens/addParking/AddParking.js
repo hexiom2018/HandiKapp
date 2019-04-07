@@ -59,22 +59,47 @@ class AddParking extends React.Component {
     }
 
     componentDidMount() {
-        const { currentAddress } = this.props
+        const { currentAddress, parkingSpace } = this.props
         if (currentAddress) {
             this.setState({
                 currentAddress: currentAddress.address,
                 coordinates: currentAddress.coordinates
             })
         }
+
+        if (parkingSpace) {
+            console.log(parkingSpace, 'parking space here')
+            // const { fields } = this.state
+
+            // fields.map((items) => {
+            //     if (items.value) {
+            //         this.setState({
+            //             [items.value]: parkingSpace.parking[items.value]
+            //         })
+            //     }
+            // })
+
+        }
     }
 
     componentWillReceiveProps(props) {
-        const { currentAddress } = props
+        const { currentAddress, parkingSpace } = props
         if (currentAddress) {
             this.setState({
                 currentAddress: currentAddress.address,
                 coordinates: currentAddress.coordinates
             })
+        }
+
+        if (parkingSpace) {
+            const { fields } = this.state
+
+            this.setState({
+                normal: parkingSpace.parking.normal,
+                sideLoad: parkingSpace.parking.sideLoad,
+                backLoad: parkingSpace.parking.backLoad
+            })
+
         }
     }
 
@@ -158,7 +183,8 @@ class AddParking extends React.Component {
                     backLoad: backLoad ? backLoad : 0,
                 },
                 toilet: toylet,
-                parkingComment: comments
+                parkingComment: comments,
+                userUid: user.userUid
             }
             console.log(obj, 'object')
             AddParkingSpace(obj, user.userUid).then(() => {
@@ -173,7 +199,7 @@ class AddParking extends React.Component {
     }
 
     render() {
-        const { fields, toilet, address, comments, text } = this.state
+        const { fields, toilet, address, comments, text, parkingSpace } = this.state
         return (
             <AppHeader
                 icon={true}
@@ -298,6 +324,7 @@ function mapStateToProps(states) {
         user: states.authReducers.USER,
         vehicle: states.authReducers.VEHICLE,
         currentAddress: states.authReducers.CURRENTADDRESS,
+        parkingSpace: states.authReducers.PARKINGSPACE,
     })
 }
 

@@ -135,10 +135,11 @@ export function AddParkingSpace(data, user) {
 export function GetParkingSpace(user) {
     return dispatch => {
         return new Promise(function (resolve, reject) {
-            db.ref('/places/'+user).on('child_added', (snapShot) => {
-                if(snapShot.exists) {
-                    console.log(snapShot.val(), 'snapshot value')
-                }else{
+            db.ref('/places/' + user).on('value', (snapShot) => {
+                if (snapShot.val()) {
+                    // console.log(snapShot.val(), 'mil gay haiu')
+                    dispatch({ type: actionTypes.PARKINGSPACE, payload: snapShot.val() })
+                } else {
                     console.log('nhi ha bhai')
                 }
             })

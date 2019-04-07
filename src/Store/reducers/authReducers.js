@@ -6,6 +6,7 @@ const INITIAL_STATE = {
     VEHICLE: null,
     PLACES: null,
     CURRENTADDRESS: null,
+    PARKINGSPACE: null
 }
 
 export default (states = INITIAL_STATE, action) => {
@@ -34,6 +35,11 @@ export default (states = INITIAL_STATE, action) => {
             return ({
                 ...states,
                 CURRENTADDRESS: action.payload
+            })
+        case 'PARKINGSPACE':
+            return ({
+                ...states,
+                PARKINGSPACE: action.payload
             })
         default:
             return states;
