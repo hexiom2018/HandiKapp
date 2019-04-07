@@ -11,6 +11,7 @@ import navigationIcon from '../../../assets/navigationIcon.png';
 import flagIcon from '../../../assets/flagIcon.png';
 import minusIcon from '../../../assets/minusIcon.png';
 import checkIcon from '../../../assets/checkIcon.png';
+import selectMarkerImg from '../../../assets/selected.png';
 import { currentAddress } from '../../Store/actions/FetchData'
 import firebase from 'firebase'
 import { Snackbar } from 'react-native-paper'
@@ -61,14 +62,14 @@ class Map extends React.Component {
 
     componentWillReceiveProps(props) {
         const { Places, backBtn, currentUserVechile, currentUser } = props
-        console.log(currentUserVechile, 'currentUserVechile..>>');
+        // console.log(currentUserVechile, 'currentUserVechile..>>');
         this.setState({ currentUID: currentUser.userUid })
 
         if (Places && Places.length) {
             this.setState({ Places: Places, marker: true, currentUserVechile })
             Places.map(val => {
                 if (currentUserVechile.parkUserUID === val.userUid) {
-                    console.log(val.parking, '---');
+                    // console.log(val.parking, '---');
                     this.setState({
                         selectPlace: false,
                         selectPlaceConfirm: false,
@@ -79,28 +80,20 @@ class Map extends React.Component {
                     var parking = Object.keys(val.parking)
                     var value = parking.indexOf(currentUserVechile.type)
                     if (value === 0 && val.parking.backLoad >= 1) {
-                        console.log(val.parking.backLoad, 'backLoad**');
                         this.setState({ backLoad: true, parkSpaces: val.parking.backLoad, item: val })
                     } else if (value === 1 && val.parking.normal >= 1) {
-                        console.log(val.parking.normal, 'normal**');
                         this.setState({ normal: true, parkSpaces: val.parking.normal, item: val })
                     } else if (value === 2 && val.parking.sideLoad >= 1) {
-                        console.log(val.parking.sideLoad, 'sideLoad**');
                         this.setState({ sideLoad: true, parkSpaces: val.parking.sideLoad, item: val })
                     }
                 }
             })
         }
-// console.log(currentUserVechile.parkUserUID);
-
-        // if(currentUserVechile.parkUserUID === undefined){
-        //     this.setState({searchInput: true , exitParking: false , })
-        // }
 
         if (backBtn === 'Parkering') {
             this.setState({
                 selectPlace: false,
-                searchInput: true,
+                // item: null,
                 suggestion: false
             })
         }
@@ -185,29 +178,19 @@ class Map extends React.Component {
         var parking = Object.keys(item.parking)
         var val = parking.indexOf(currentUserVechile.type)
         if (val === 0 && item.parking.backLoad >= 1) {
-            console.log(item.parking.backLoad, 'backLoad**');
             this.setState({ nextBtn: true, backLoad: true, parkSpaces: item.parking.backLoad })
         } else if (val === 1 && item.parking.normal >= 1) {
-            console.log(item.parking.normal, 'normal**');
             this.setState({ nextBtn: true, normal: true, parkSpaces: item.parking.normal })
         } else if (val === 2 && item.parking.sideLoad >= 1) {
-            console.log(item.parking.sideLoad, 'sideLoad**');
             this.setState({ nextBtn: true, sideLoad: true, parkSpaces: item.parking.sideLoad })
         }
 
     }
     place() {
         const { title } = this.props
-        const { nextBtn, item, backLoad, normal, sideLoad, parkSpaces } = this.state
+        const { nextBtn, item } = this.state
         var parkUserUID = item.userUid
         if (nextBtn) {
-            if (backLoad) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: parkSpaces - 1 })
-            } else if (normal) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: parkSpaces - 1 })
-            } else if (sideLoad) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: parkSpaces - 1 })
-            }
             this.setState({
                 selectPlaceConfirm: true,
                 selectPlace: false,
@@ -216,14 +199,14 @@ class Map extends React.Component {
             })
             title('Parkering')
         } else {
-            this.setState({ alert: true })
+            this.setState({ alert: true, alertText: 'Not Avail Parkering til plads' })
         }
     }
 
     closeDetail() {
         const { title } = this.props
         title('Parkering')
-        this.setState({ selectPlace: false })
+        this.setState({ selectPlace: false, item: null })
     }
 
     confirm() {
@@ -233,7 +216,7 @@ class Map extends React.Component {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (parkSpaces - 1).toString() })
             this.setState({ parkSpaces: parkSpaces - 1 })
             firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
-                console.log(snapShot.key, '/*/*/*/');
+                // console.log(snapShot.key, '/*/*/*/');
                 var key = snapShot.key
                 firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
             })
@@ -241,7 +224,7 @@ class Map extends React.Component {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (parkSpaces - 1).toString() })
             this.setState({ parkSpaces: parkSpaces - 1 })
             firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
-                console.log(snapShot.key, '/*/*/*/');
+                // console.log(snapShot.key, '/*/*/*/');
                 var key = snapShot.key
                 firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
             })
@@ -249,7 +232,7 @@ class Map extends React.Component {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (parkSpaces - 1).toString() })
             this.setState({ parkSpaces: parkSpaces - 1 })
             firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
-                console.log(snapShot.key, '/*/*/*/');
+                // console.log(snapShot.key, '/*/*/*/');
                 var key = snapShot.key
                 firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
             })
@@ -264,19 +247,37 @@ class Map extends React.Component {
 
 
     exitParking() {
+        const { title } = this.props
         const { currentUID, item, backLoad, normal, sideLoad, parkSpaces } = this.state
+        title('Parkering')
         var parkUserUID = item.userUid
         if (backLoad) {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (+parkSpaces + 1).toString() })
+            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+                var key = snapShot.key
+                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: "" })
+            })
         } else if (normal) {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (+parkSpaces + 1).toString() })
             firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
-                console.log(snapShot.key, '/*/*/*/');
                 var key = snapShot.key
                 firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: "" })
             })
         } else if (sideLoad) {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (+parkSpaces + 1).toString() })
+            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+                var key = snapShot.key
+                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: "" })
+            })
+        }
+        this.setState({
+            searchInput: true,
+            exitParking: false,
+            item: null,
+            markers: false,
+            search: ''
+        })
+    }
 
     search(text) {
         const { Places } = this.state
@@ -300,15 +301,13 @@ class Map extends React.Component {
                     }
                     this.setState({ data: arr })
                 }
-
             })
-
         }
     }
 
     render() {
         const {
-            currentLocation, get, selectPlace, search, item, exitParking, nextBtn, alert,
+            currentLocation, get, selectPlace, search, item, exitParking, alertText, alert, markers,
             searchInput, suggestion, selectPlaceConfirm, Places, marker, distanceKm, data
         } = this.state
 
@@ -320,46 +319,74 @@ class Map extends React.Component {
                             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                             style={styles.map}
                             region={{
-                                latitude: currentLocation.lat,
-                                longitude: currentLocation.long,
+                                latitude: item ? item.coordinates.lat : currentLocation.lat,
+                                longitude: item ? item.coordinates.long : currentLocation.long,
                                 latitudeDelta: LATITUDE_DELTA,
                                 longitudeDelta: LONGITUDE_DELTA,
                             }}
                         >
                             {
-                                Places ?
-                                    Places.map((item, index) => {
+                                Places && !item && !markers &&
+                                Places.map((item, index) => {
 
-                                        return (
-                                            <MapView.Marker
-                                                key={index}
-                                                onPress={() => this.select(item)}
-                                                coordinate={{
-                                                    latitude: item.coordinates.lat,
-                                                    longitude: item.coordinates.long,
-                                                }}
+                                    return (
+                                        <MapView.Marker
+                                            key={index}
+                                            onPress={() => this.select(item)}
+                                            coordinate={{
+                                                latitude: item.coordinates.lat,
+                                                longitude: item.coordinates.long,
+                                            }}
 
-                                            >
-                                                <Image
-                                                    source={imgHandi}
-                                                    style={{ width: 55, height: 78 }}
-                                                />
-                                            </MapView.Marker>
-                                        )
-                                    })
-                                    :
-                                    <MapView.Marker
-                                        coordinate={{
-                                            latitude: currentLocation.lat,
-                                            longitude: currentLocation.long,
-                                        }}
-                                    >
-                                        <Image
-                                            source={imgHandi}
-                                            style={{ width: 55, height: 78 }}
-                                        />
-                                    </MapView.Marker>
+                                        >
+                                            <Image
+                                                source={imgHandi}
+                                                style={{ width: 55, height: 78 }}
+                                            />
+                                        </MapView.Marker>
+                                    )
+                                })
+
                             }
+                            {
+                                markers &&
+                                Places.map((item, index) => {
+
+                                    return (
+                                        <MapView.Marker
+                                            key={index}
+                                            onPress={() => this.setState({ alert: true, alertText: 'Afslut Parkering' })}
+                                            coordinate={{
+                                                latitude: item.coordinates.lat,
+                                                longitude: item.coordinates.long,
+                                            }}
+
+                                        >
+                                            <Image
+                                                source={imgHandi}
+                                                style={{ width: 55, height: 78 }}
+                                            />
+                                        </MapView.Marker>
+                                    )
+                                })
+                            }
+
+                            {
+                                item && !markers &&
+                                <MapView.Marker
+                                    coordinate={{
+                                        latitude: item.coordinates.lat,
+                                        longitude: item.coordinates.long,
+                                    }}
+                                >
+                                    <Image
+                                        source={selectMarkerImg}
+                                        style={{ width: 55, height: 85 }}
+                                    />
+                                </MapView.Marker>
+                            }
+
+
 
                         </MapView >
 
@@ -442,7 +469,7 @@ class Map extends React.Component {
                             <View style={styles.bottomView}>
                                 <View style={styles.bottomDiv}>
                                     <View style={styles.closeBtn}>
-                                        <Text onPress={() => this.setState({ selectPlaceConfirm: false, searchInput: true })}><Icon name='close' size={30} color='gray' /></Text>
+                                        <Text onPress={() => this.setState({ selectPlaceConfirm: false, searchInput: true, search: '', item: null })}><Icon name='close' size={30} color='gray' /></Text>
                                     </View>
                                     <View style={{ marginBottom: 14, marginLeft: 20 }}>
                                         <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{'PARKPARK A/S:'}</Text>
@@ -473,10 +500,10 @@ class Map extends React.Component {
                                 <View style={{ width: '100%' }}>
                                     <View style={styles.bottomDiv}>
                                         <View style={styles.closeBtn}>
-                                            <Text onPress={() => this.setState({ exitParking: false, selectPlaceConfirm: true })}><Icon name='close' size={30} color='gray' /></Text>
+                                            <Text onPress={() => this.setState({ alert: true, alertText: 'Afslut Parkering' })}><Icon name='close' size={30} color='gray' /></Text>
                                         </View>
                                         <View style={{ marginBottom: 16, marginLeft: 20 }}>
-                                            <View style={{ marginLeft: 10, flexDirection: "row", marginBottom: 10 }}>
+                                            <View style={{ marginLeft: 20, flexDirection: "row", marginBottom: 10 }}>
                                                 <View style={{ marginTop: 4 }}>
                                                     <Image
                                                         source={flagIcon}
@@ -497,7 +524,7 @@ class Map extends React.Component {
                                                 </View>
                                                 <View>
                                                     <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>{'Er pladsen optaget?'}</Text>
-                                                    <Text style={{ color: '#0291d3', paddingLeft: 10, fontSize: 18, textDecorationLine: 'underline' }}>Vis Nærmeste plads ></Text>
+                                                    <Text style={{ color: '#0291d3', paddingLeft: 10, fontSize: 18, textDecorationLine: 'underline' }} onPress={() => this.setState({ markers: true })}>{'Vis Nærmeste plads >'}</Text>
                                                 </View>
                                             </View>
                                         </View>
@@ -531,7 +558,7 @@ class Map extends React.Component {
                                 },
                             }}
                         >
-                            Don't enough space
+                            {alertText}
                         </Snackbar>
                     </View>
                     :
