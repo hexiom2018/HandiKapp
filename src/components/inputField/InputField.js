@@ -15,7 +15,7 @@ class InputField extends React.Component {
     }
 
     render() {
-        const { name, label, type, placeholder, secure, value, fontAwesome, PlaceholderColor, TextColor, iconColor } = this.props
+        const { name, label, type, placeholder, secure, disabled, value, fontAwesome, PlaceholderColor, TextColor, iconColor } = this.props
         return (
             <View style={styles.form}>
                 <View style={styles.label}>
@@ -45,6 +45,7 @@ class InputField extends React.Component {
                     <TextInput
                         keyboardType={type}
                         style={styles.input}
+                        editable={disabled ? false : true}
                         value={value ? value : null}
                         secureTextEntry={secure ? secure : false}
                         placeholder={placeholder}

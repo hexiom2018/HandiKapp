@@ -68,16 +68,14 @@ class AddParking extends React.Component {
         }
 
         if (parkingSpace) {
-            console.log(parkingSpace, 'parking space here')
-            // const { fields } = this.state
-
-            // fields.map((items) => {
-            //     if (items.value) {
-            //         this.setState({
-            //             [items.value]: parkingSpace.parking[items.value]
-            //         })
-            //     }
-            // })
+            this.setState({
+                normal: parkingSpace.parking.normal,
+                sideLoad: parkingSpace.parking.sideLoad,
+                backLoad: parkingSpace.parking.backLoad,
+                toylet: parkingSpace.toilet,
+                comments: parkingSpace.parkingComment,
+                address: parkingSpace.address.streetName
+            })
 
         }
     }
@@ -92,12 +90,14 @@ class AddParking extends React.Component {
         }
 
         if (parkingSpace) {
-            const { fields } = this.state
-
             this.setState({
                 normal: parkingSpace.parking.normal,
                 sideLoad: parkingSpace.parking.sideLoad,
-                backLoad: parkingSpace.parking.backLoad
+                backLoad: parkingSpace.parking.backLoad,
+                toylet: parkingSpace.toilet,
+                comments: parkingSpace.parkingComment,
+                address: parkingSpace.address.streetName
+
             })
 
         }
@@ -165,33 +165,38 @@ class AddParking extends React.Component {
         const { AddParkingSpace } = this.props.actions
         const { user } = this.props
         if (currentAddress) {
+            if (normal || backLoad || sideLoad) {
+                var obj = {
+                    address: {
+                        ...currentAddress
+                    },
+                    coordinates: {
+                        ...coordinates
+                    },
+                    created: {
+                        ...user,
+                        timeStamp: Date.now()
+                    },
+                    parking: {
+                        normal: normal ? normal : 0,
+                        sideLoad: sideLoad ? sideLoad : 0,
+                        backLoad: backLoad ? backLoad : 0,
+                    },
+                    toilet: toylet,
+                    parkingComment: comments,
+                    userUid: user.userUid
+                }
+                AddParkingSpace(obj, user.userUid).then(() => {
+                    const { navigation } = this.props
 
-            var obj = {
-                address: {
-                    ...currentAddress
-                },
-                coordinates: {
-                    ...coordinates
-                },
-                created: {
-                    ...user,
-                    timeStamp: Date.now()
-                },
-                parking: {
-                    normal: normal ? normal : 0,
-                    sideLoad: sideLoad ? sideLoad : 0,
-                    backLoad: backLoad ? backLoad : 0,
-                },
-                toilet: toylet,
-                parkingComment: comments,
-                userUid: user.userUid
+                    this.setState({ text: 'med succes tilføje parkeringsplads', alert: true })
+                    setTimeout(() => {
+                        navigation.navigate('Parking')
+                    }, 1000);
+                })
+            } else {
+                this.setState({ text: 'please fill the fields', alert: true })
             }
-            console.log(obj, 'object')
-            AddParkingSpace(obj, user.userUid).then(() => {
-                console.log('data added')
-                this.setState({ text: 'med succes tilføje parkeringsplads', alert: true })
-
-            })
         } else {
             this.setState({ text: 'please enable your location', alert: true })
         }
@@ -219,6 +224,7 @@ class AddParking extends React.Component {
                                         type={'default'}
                                         placeholder={'Dit kortnr...'}
                                         value={address}
+                                        disabled={true}
                                         fontAwesome={true}
                                         PlaceholderColor={'black'}
                                         iconColor={'grey'}
