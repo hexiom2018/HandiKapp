@@ -133,7 +133,7 @@ export function UpdateUserProfile(items, userUid) {
 export function AddParkingSpace(data, user) {
     return dispatch => {
         return new Promise(function (resolve, reject) {
-            db.ref('/places/' + user).set(data).then(() => {
+            db.ref('places/' + user).set(data).then(() => {
                 resolve()
             }).catch(() => {
                 reject()

@@ -44,6 +44,7 @@ class Map extends React.Component {
     }
 
     componentDidMount() {
+        const { Places, currentUserVechile } = this.props
 
         if (!Constants.isDevice) {
             this.setState({
@@ -51,6 +52,10 @@ class Map extends React.Component {
             });
         } else {
             this._getLocationAsync();
+        }
+
+        if (Places && Places.length) {
+            this.setState({ Places: Places, marker: true, currentUserVechile })
         }
     }
 
@@ -199,10 +204,37 @@ class Map extends React.Component {
         })
     }
 
+    search(text) {
+        const { Places } = this.state
+
+        this.setState({ search: text, suggestion: true })
+        var arr = []
+
+        if (Places && Places.length) {
+            Places.map((items, index) => {
+                const streetName = (items.address.streetName).toUpperCase()
+                const city = (items.address.city).toUpperCase()
+                const country = (items.address.country).toUpperCase()
+                const name = (text).toUpperCase()
+                if (streetName.startsWith(name) || city.startsWith(name) || streetName.indexOf(name) !== -1 ||
+                    country.startsWith(name)) {
+                    arr.push(items)
+                    this.setState({ data: arr })
+                } else {
+                    if (arr.indexOf(items) !== -1) {
+                        arr.splice(items, 1)
+                    }
+                    this.setState({ data: arr })
+                }
+
+            })
+        }
+    }
+
     render() {
         const {
             currentLocation, get, selectPlace, search, item, exitParking, nextBtn, alert,
-            searchInput, suggestion, selectPlaceConfirm, Places, marker, distanceKm
+            searchInput, suggestion, selectPlaceConfirm, Places, marker, distanceKm, data
         } = this.state
 
         return (
@@ -265,33 +297,35 @@ class Map extends React.Component {
                                         placeholderTextColor='rgba(13, 13, 13 , 0.7)'
                                         style={styles.input}
                                         placeholder="Søg efter destination..."
-                                        onChangeText={(search) => this.setState({ search, suggestion: true })}
+                                        onChangeText={(search) => this.search(search)}
                                     />
                                 </View>
                             }
                             <ScrollView style={styles.dropDown}>
                                 {    // search DropDown
-                                    suggestion && marker &&
-                                    Places.map((item, index) => {
-                                        // console.log(item, '****Places****');
-                                        return (
-                                            <View key={index} style={styles.view}>
-                                                <View style={styles.border}></View>
-                                                <TouchableOpacity
-                                                    style={{ paddingTop: 15, paddingBottom: 15, }}
-                                                    onPress={() => this.select(item)}
-                                                >
-                                                    <View style={styles.searchListItem}>
-                                                        <View>
-                                                            <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)', width: 270 }} >{item.address.streetName}</Text>
-                                                            <Text style={{ fontSize: 10, color: '#0291d3', width: 270 }} >{`${item.address.zipCode === undefined ? '' : item.address.zipCode} ${item.address.streetName}, ${item.address.city}`}</Text>
+                                    suggestion && marker && search && data ?
+                                        data.map((item, index) => {
+                                            // console.log(item, '****Places****');
+                                            return (
+                                                <View key={index} style={styles.view}>
+                                                    <View style={styles.border}></View>
+                                                    <TouchableOpacity
+                                                        style={{ paddingTop: 15, paddingBottom: 15, }}
+                                                        onPress={() => this.select(item)}
+                                                    >
+                                                        <View style={styles.searchListItem}>
+                                                            <View>
+                                                                <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)', width: 270 }} >{item.address.streetName}</Text>
+                                                                <Text style={{ fontSize: 10, color: '#0291d3', width: 270 }} >{`${item.address.zipCode === undefined ? '' : item.address.zipCode} ${item.address.streetName}, ${item.address.city}`}</Text>
+                                                            </View>
+                                                            <Text style={{ paddingRight: 6 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
                                                         </View>
-                                                        <Text style={{ paddingRight: 6 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            </View>
-                                        )
-                                    })
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        })
+                                        :
+                                        null
                                 }
                             </ScrollView>
                         </View>
@@ -446,6 +480,7 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
     },
     dropDown: {
+        maxHeight: 200,
         backgroundColor: 'white',
         width: '95%'
     },

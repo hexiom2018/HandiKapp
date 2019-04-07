@@ -41,11 +41,11 @@ const customStyles = {
 }
 
 const radioGroupList = [{
-    value: 'ordinary'
+    value: 'normal'
 }, {
-    value: 'side Load'
+    value: 'sideLoad'
 }, {
-    value: 'back Load'
+    value: 'backLoad'
 }];
 
 class SignUp extends React.Component {
