@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
+import { StackActions, NavigationActions } from 'react-navigation';
 import AppHeader from '../../components/header/Header';
-import Map from '../../components/map/Map';
 import { bindActionCreators } from 'redux';
-import { GetParkingSpace } from '../../Store/actions/authAction';
 
 
 
@@ -16,31 +15,23 @@ class About extends React.Component {
         }
     }
 
-    
-
-    titleHeader(title) {
-        if (title === 'Om Handikapp') {
-            this.setState({ title: title })
-        } else if (title === 'Parkering') {
-            this.setState({ title: title })
-        }
-    }
-
-    openMenu() {
-        this.props.navigation.openDrawer()
-    }
-
     static navigationOptions = { header: null }
+
+    goBack() {
+        this.props.navigation.dispatch(NavigationActions.back())
+    }
 
     render() {
         const { title } = this.state
         return (
             <AppHeader
-                headerTitle={title}
-                openDrawer={() => this.openMenu()}
-                back={(back) => this.titleHeader(back)}
+                icon={true}
+                fontAwesome={true}
+                IconName={'briefcase'}
+                headerTitle={'Om Handikapp'}
+                back={() => this.goBack()}
             >
-              
+
             </AppHeader>
         )
     }
@@ -53,7 +44,7 @@ function mapStateToProps(states) {
 
 function mapDispatchToProps(dispatch) {
     return ({
-     
+
     })
 }
 
