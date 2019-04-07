@@ -1,5 +1,8 @@
 import React from 'react';
-import { View, ImageBackground, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
+import {
+    View, ImageBackground, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView
+    , KeyboardAvoidingView,
+} from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Splashh from '../../../assets/Splashh.jpg'
 import { connect } from 'react-redux';
@@ -83,85 +86,90 @@ class LogIn extends React.Component {
 
         return (
             <ImageBackground source={Splashh} style={{ width: '100%', height: '100%' }}>
-                <View style={{ flex: 1 }}>
-                    <StatusBar hidden={true} />
-                    <View style={styles.Heading}><Text style={styles.headingText} onPress={() => this.logIn()}>Log ind</Text></View>
-                    <View style={styles.body}>
-                        <View style={styles.form}>
-                            {
-                                fields &&
-                                fields.map((items, index) => {
-                                    return (
-                                        <InputField
-                                            key={index}
-                                            label={items.label}
-                                            name={items.name}
-                                            type={items.type}
-                                            PlaceholderColor={'black'}
-                                            secure={items.secure}
-                                            TextColor={'white'}
-                                            fontAwesome={items.fontAwesome}
-                                            placeholder={items.placeholder}
-                                            change={(value) => this.onChange(value, items.value)}
-                                            InputBackgroundColor={'white'}
-                                            iconColor={'white'}
-                                        />
-                                    )
-                                })
-                            }
-                        </View>
-                        <View style={styles.button}>
-                            <Button
-                                color={true}
-                                border={true}
-                                name={'Log ind'}
-                                background={true}
-                                buttonAction={() => this.Login()}
-                                textColor={'white'}
-                            />
-                        </View>
+                <KeyboardAvoidingView style={{ flexGrow: 1 }} behavior={'padding'} enabled>
+                    <ScrollView style={{ flex: 1 }}>
 
-                        <View>
-                            <TouchableOpacity
-                                onPress={this.function}
-                                activeOpacity={0.7}
-                                style={[styles.button,
-                                ]}>
-                                <View style={{ alignItems: 'flex-end', paddingHorizontal: 3, }}>
-                                    <Text style={{ fontSize: 15, color: 'white', borderBottomColor: 'white', borderBottomWidth: 1 }
-                                    }>
-                                        {'Glemt dit password?'}
-                                    </Text>
+                        <View style={{ flex: 1 }}>
+                            <StatusBar hidden={true} />
+                            <View style={styles.Heading}><Text style={styles.headingText} onPress={() => this.logIn()}>Log ind</Text></View>
+                            <View style={styles.body}>
+                                <View style={styles.form}>
+                                    {
+                                        fields &&
+                                        fields.map((items, index) => {
+                                            return (
+                                                <InputField
+                                                    key={index}
+                                                    label={items.label}
+                                                    name={items.name}
+                                                    type={items.type}
+                                                    PlaceholderColor={'black'}
+                                                    secure={items.secure}
+                                                    TextColor={'white'}
+                                                    fontAwesome={items.fontAwesome}
+                                                    placeholder={items.placeholder}
+                                                    change={(value) => this.onChange(value, items.value)}
+                                                    InputBackgroundColor={'white'}
+                                                    iconColor={'white'}
+                                                />
+                                            )
+                                        })
+                                    }
+                                </View>
+                                <View style={styles.button}>
+                                    <Button
+                                        color={true}
+                                        border={true}
+                                        name={'Log ind'}
+                                        background={true}
+                                        buttonAction={() => this.Login()}
+                                        textColor={'white'}
+                                    />
                                 </View>
 
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={this.function}
-                                activeOpacity={0.7}
-                                style={[styles.button,
-                                ]}>
-                                <View style={{ alignItems: 'flex-end', paddingHorizontal: 3 }}>
-                                    <Text style={{ fontSize: 16, color: 'white', fontWeight: '500' }}>
-                                        {'+Opret ny bruger her'}
-                                    </Text>
-                                </View>
+                                <View>
+                                    <TouchableOpacity
+                                        onPress={this.function}
+                                        activeOpacity={0.7}
+                                        style={[styles.button,
+                                        ]}>
+                                        <View style={{ alignItems: 'flex-end', paddingHorizontal: 3, }}>
+                                            <Text style={{ fontSize: 15, color: 'white', borderBottomColor: 'white', borderBottomWidth: 1 }
+                                            }>
+                                                {'Glemt dit password?'}
+                                            </Text>
+                                        </View>
 
-                            </TouchableOpacity>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={this.function}
+                                        activeOpacity={0.7}
+                                        style={[styles.button,
+                                        ]}>
+                                        <View style={{ alignItems: 'flex-end', paddingHorizontal: 3 }}>
+                                            <Text style={{ fontSize: 16, color: 'white', fontWeight: '500' }}>
+                                                {'+Opret ny bruger her'}
+                                            </Text>
+                                        </View>
+
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
-                    </View>
-                </View>
-                <Snackbar
-                    visible={this.state.alert}
-                    onDismiss={() => this.setState({ alert: false })}
-                    action={{
-                        label: 'Ok',
-                        onPress: () => {
-                            // Do something
-                        },
-                    }}
-                >
-                    {text}
-                </Snackbar>
+                        <Snackbar
+                            visible={this.state.alert}
+                            onDismiss={() => this.setState({ alert: false })}
+                            action={{
+                                label: 'Ok',
+                                onPress: () => {
+                                    // Do something
+                                },
+                            }}
+                        >
+                            {text}
+                        </Snackbar>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </ImageBackground>
         );
     }
@@ -199,7 +207,9 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
         width: '100%',
         paddingVertical: 10,
-        alignItems: 'center'
+        alignItems: 'center',
+        // justifyContent:'center'
+        marginTop: 90
     },
     body: {
         flex: 1,
