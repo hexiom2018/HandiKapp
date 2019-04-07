@@ -7,7 +7,6 @@ import { StackActions, NavigationActions } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { current_User, userAuth } from '../../Store/actions/authAction';
 import { LinearGradient } from 'expo';
-import { FetchPlaces } from '../../Store/actions/FetchData';
 
 class FirstScreen extends React.Component {
     constructor(props) {
@@ -21,7 +20,6 @@ class FirstScreen extends React.Component {
 
         userAuth().then(() => {
 
-        this.props.places()
             const resetAction = StackActions.reset({
                 index: 0,
                 actions: [
@@ -72,9 +70,6 @@ function mapStateToProps(states) {
 
 function mapDispatchToProps(dispatch) {
     return ({
-        places: () => {
-            dispatch(FetchPlaces())
-        },
         actions: bindActionCreators({
             userAuth
         }, dispatch)

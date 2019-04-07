@@ -9,6 +9,7 @@ export function userAuth() {
 
         return new Promise(function (resolve, reject) {
             firebase.auth().onAuthStateChanged((user) => {
+                var placesArr = [];
                 if (user) {
                     var uid = user.uid;
                     // dispatch({ type: actionTypes.LOADER, payload: true })
@@ -36,6 +37,16 @@ export function userAuth() {
                             dispatch({ type: actionTypes.VEHICLE, payload: snapShot.val() })
                         }
                     })
+
+                    db.ref('places').on('child_added', snapShot => {
+                        placesArr.push(snapShot.val())
+                        if (placesArr && placesArr.length) {
+                            dispatch(
+                                { type: actionTypes.PLACES, payload: placesArr }
+                            )
+                        }
+                    })
+                    
                     resolve()
                 }
                 else {
