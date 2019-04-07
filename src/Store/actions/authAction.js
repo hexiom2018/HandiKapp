@@ -143,6 +143,44 @@ export function AddParkingSpace(data, user) {
 }
 
 
+export function GetParkingSpace(user) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            db.ref('/places/').orderByChild('userUid').equalTo(user).on('child_added', (snapShot) => {
+                dispatch({ type: actionTypes.PARKINGSPACE, payload: snapShot.val() })
+            })
+
+            db.ref('/places/').orderByChild('userUid').equalTo(user).on('child_changed', (snapShot) => {
+                dispatch({ type: actionTypes.PARKINGSPACE, payload: snapShot.val() })
+            })
+        })
+    }
+}
+
+
+export function ForgetPasswordAction(email) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            // console.log('Email Address', email)
+            var auth = firebase.auth();
+
+            auth.sendPasswordResetEmail(email)
+                .then((success) => {
+                    resolve()
+                    // Email sent.
+                    // console.log('success***', success)
+                    
+                })
+                .catch((error) => {
+                    // An error happened.
+                    reject(error)
+                    
+                })
+        })
+    }
+}
+
+
 //LOgOut
 
 export function Log_Out() {

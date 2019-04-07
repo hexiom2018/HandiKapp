@@ -11,6 +11,7 @@ import { AddParkingSpace } from '../../Store/actions/authAction'
 import InputField from '../../components/inputField/InputField';
 import AppHeader from '../../components/header/Header';
 import Button from '../../components/button/Button';
+import IconFont from 'react-native-vector-icons/FontAwesome'
 import { Snackbar } from 'react-native-paper'
 import Label from '../../components/label/Label';
 
@@ -46,7 +47,8 @@ class AddParking extends React.Component {
             toilet: {
                 name: 'Antal handicap toiletter',
                 icon: true,
-                iconName: 'person',
+                fontAwesome: true,
+                iconName: 'wheelchair',
                 iconColor: 'grey',
                 type: 'number-pad',
                 borderColor: 'lightgrey',
@@ -57,22 +59,47 @@ class AddParking extends React.Component {
     }
 
     componentDidMount() {
-        const { currentAddress } = this.props
+        const { currentAddress, parkingSpace } = this.props
         if (currentAddress) {
             this.setState({
                 currentAddress: currentAddress.address,
                 coordinates: currentAddress.coordinates
             })
         }
+
+        if (parkingSpace) {
+            this.setState({
+                normal: parkingSpace.parking.normal,
+                sideLoad: parkingSpace.parking.sideLoad,
+                backLoad: parkingSpace.parking.backLoad,
+                toylet: parkingSpace.toilet,
+                comments: parkingSpace.parkingComment,
+                address: parkingSpace.address.streetName
+            })
+
+        }
     }
 
     componentWillReceiveProps(props) {
-        const { currentAddress } = props
+        const { currentAddress, parkingSpace } = props
         if (currentAddress) {
             this.setState({
                 currentAddress: currentAddress.address,
                 coordinates: currentAddress.coordinates
             })
+        }
+
+        if (parkingSpace) {
+            this.setState({
+                normal: parkingSpace.parking.normal,
+                sideLoad: parkingSpace.parking.sideLoad,
+                backLoad: parkingSpace.parking.backLoad,
+                toylet: parkingSpace.toilet,
+                comments: parkingSpace.parkingComment,
+                address: parkingSpace.address.streetName
+
+            })
+
         }
     }
 
@@ -93,10 +120,18 @@ class AddParking extends React.Component {
                 <View style={{ alignSelf: 'center', width: 55 }}>
                     {
                         item.icon ?
-                            <Icon
-                                name={item.iconName}
-                                color={item.iconColor}
-                            />
+                            item.fontAwesome ?
+                                <IconFont
+                                    style={{ paddingLeft: 20 }}
+                                    size={25}
+                                    name={item.iconName}
+                                    color={item.iconColor}
+                                />
+                                :
+                                <Icon
+                                    name={item.iconName}
+                                    color={item.iconColor}
+                                />
                             :
                             null
                     }
@@ -130,32 +165,38 @@ class AddParking extends React.Component {
         const { AddParkingSpace } = this.props.actions
         const { user } = this.props
         if (currentAddress) {
+            if (normal || backLoad || sideLoad) {
+                var obj = {
+                    address: {
+                        ...currentAddress
+                    },
+                    coordinates: {
+                        ...coordinates
+                    },
+                    created: {
+                        ...user,
+                        timeStamp: Date.now()
+                    },
+                    parking: {
+                        normal: normal ? normal : 0,
+                        sideLoad: sideLoad ? sideLoad : 0,
+                        backLoad: backLoad ? backLoad : 0,
+                    },
+                    toilet: toylet,
+                    parkingComment: comments,
+                    userUid: user.userUid
+                }
+                AddParkingSpace(obj, user.userUid).then(() => {
+                    const { navigation } = this.props
 
-            var obj = {
-                address: {
-                    ...currentAddress
-                },
-                coordinates: {
-                    ...coordinates
-                },
-                created: {
-                    ...user,
-                    timeStamp: Date.now()
-                },
-                parking: {
-                    normal: normal ? normal : 0,
-                    sideLoad: sideLoad ? sideLoad : 0,
-                    backLoad: backLoad ? backLoad : 0,
-                },
-                toilet: toylet,
-                parkingComment: comments
+                    this.setState({ text: 'med succes tilføje parkeringsplads', alert: true })
+                    setTimeout(() => {
+                        navigation.navigate('Parking')
+                    }, 1000);
+                })
+            } else {
+                this.setState({ text: 'please fill the fields', alert: true })
             }
-            console.log(obj, 'object')
-            AddParkingSpace(obj, user.userUid).then(() => {
-                console.log('data added')
-                this.setState({ text: 'med succes tilføje parkeringsplads', alert: true })
-
-            })
         } else {
             this.setState({ text: 'please enable your location', alert: true })
         }
@@ -163,7 +204,7 @@ class AddParking extends React.Component {
     }
 
     render() {
-        const { fields, toilet, address, comments, text } = this.state
+        const { fields, toilet, address, comments, text, parkingSpace } = this.state
         return (
             <AppHeader
                 icon={true}
@@ -179,10 +220,11 @@ class AddParking extends React.Component {
                                 <View style={{ width: '100%', alignItems: 'center' }}>
                                     <InputField
                                         label={'Din placering'}
-                                        name={'wheelchair'}
+                                        name={'map-marker'}
                                         type={'default'}
                                         placeholder={'Dit kortnr...'}
                                         value={address}
+                                        disabled={true}
                                         fontAwesome={true}
                                         PlaceholderColor={'black'}
                                         iconColor={'grey'}
@@ -216,8 +258,7 @@ class AddParking extends React.Component {
                                 <View style={{ width: '100%', alignItems: 'center' }}>
                                     <Label
                                         label={'Kommentar til pladsen'}
-                                        name={'wheelchair'}
-                                        fontAwesome={true}
+                                        name={'chat'}
                                         iconColor={'grey'}
                                     />
                                 </View>
@@ -289,6 +330,7 @@ function mapStateToProps(states) {
         user: states.authReducers.USER,
         vehicle: states.authReducers.VEHICLE,
         currentAddress: states.authReducers.CURRENTADDRESS,
+        parkingSpace: states.authReducers.PARKINGSPACE,
     })
 }
 

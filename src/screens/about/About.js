@@ -8,33 +8,18 @@ import { GetParkingSpace } from '../../Store/actions/authAction';
 
 
 
-class Parking extends React.Component {
+class About extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            title: 'Parkering'
+            title: ' Om Handikapp'
         }
     }
 
-    componentWillMount() {
-        const { user } = this.props
-        const { GetParkingSpace } = this.props.actions
-        if (user) {
-            GetParkingSpace(user.userUid)
-        }
-    }
-
-    componentWillReceiveProps(props) {
-        const { user } = props
-        const { GetParkingSpace } = this.props.actions
-
-        if (user) {
-            GetParkingSpace(user.userUid)
-        }
-    }
+    
 
     titleHeader(title) {
-        if (title === 'Søgning') {
+        if (title === 'Om Handikapp') {
             this.setState({ title: title })
         } else if (title === 'Parkering') {
             this.setState({ title: title })
@@ -55,10 +40,7 @@ class Parking extends React.Component {
                 openDrawer={() => this.openMenu()}
                 back={(back) => this.titleHeader(back)}
             >
-                <Map
-                    backBtn={title}
-                    title={(title) => this.titleHeader(title)}
-                />
+              
             </AppHeader>
         )
     }
@@ -66,16 +48,13 @@ class Parking extends React.Component {
 
 function mapStateToProps(states) {
     return ({
-        user: states.authReducers.USER,
     })
 }
 
 function mapDispatchToProps(dispatch) {
     return ({
-        actions: bindActionCreators({
-            GetParkingSpace
-        }, dispatch)
+     
     })
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Parking);
+export default connect(mapStateToProps, mapDispatchToProps)(About);

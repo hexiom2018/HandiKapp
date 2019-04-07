@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ImageBackground,  ActivityIndicator, } from 'react-native';
+import { View, ImageBackground, ActivityIndicator, Image } from 'react-native';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import Splashh from '../../../assets/splash-screen/splash-image.png';
@@ -7,6 +7,9 @@ import { StackActions, NavigationActions } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { current_User, userAuth } from '../../Store/actions/authAction';
 import { LinearGradient } from 'expo';
+import { FetchPlaces } from '../../Store/actions/FetchData';
+import logo from '../../../assets/splash-screen/logo.png'
+
 
 class FirstScreen extends React.Component {
     constructor(props) {
@@ -37,26 +40,33 @@ class FirstScreen extends React.Component {
                 })
                 this.props.navigation.dispatch(resetAction)
             })
+
     }
 
     static navigationOptions = { header: null }
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, position: 'relative' }}>
                 <ImageBackground
                     source={Splashh}
                     style={{ width: '100%', height: '100%' }}>
                     <LinearGradient
-                        colors={['#83E2DA','#7ACED2','#0199B0', '#0093d0']}
+                        colors={['#83E2DA', '#7ACED2', '#0199B0', '#0093d0']}
                         style={{ flex: 1 }}
                         opacity={0.7}
 
                     >
-                        <View style={{ flex: 1, justifyContent:'center'  }}>
-                        <ActivityIndicator size="large" color="#ffffff" />
+                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                            <ActivityIndicator size="large" color="#ffffff" />
                         </View>
                     </LinearGradient>
+                    <View style={{ position: 'absolute', top: '35%', right: '10%', left: '10%' }}>
+                        <Image
+                            // style={{ width: 100, height: 100 }}
+                            source={logo}
+                        />
+                    </View>
                 </ImageBackground>
             </View>
         );
