@@ -87,7 +87,6 @@ class FirstScreen extends React.Component {
 
         userAuth().then(() => {
 
-            this.props.places()
             const resetAction = StackActions.reset({
                 index: 0,
                 actions: [
@@ -165,9 +164,6 @@ function mapStateToProps(states) {
 
 function mapDispatchToProps(dispatch) {
     return ({
-        places: () => {
-            dispatch(FetchPlaces())
-        },
         actions: bindActionCreators({
             userAuth
         }, dispatch)

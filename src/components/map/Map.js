@@ -12,6 +12,8 @@ import flagIcon from '../../../assets/flagIcon.png';
 import minusIcon from '../../../assets/minusIcon.png';
 import checkIcon from '../../../assets/checkIcon.png';
 import { currentAddress } from '../../Store/actions/FetchData'
+import firebase from 'firebase'
+import { Snackbar } from 'react-native-paper'
 
 
 const { width, height } = Dimensions.get('window');
@@ -32,7 +34,12 @@ class Map extends React.Component {
             exitParking: false,
             searchInput: true,
             suggestion: false,
-            marker: false
+            marker: false,
+            nextBtn: false,
+            backLoad: false,
+            normal: false,
+            sideLoad: false,
+            parkSpaces: ''
         }
     }
 
@@ -48,9 +55,11 @@ class Map extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        const { Places, backBtn } = props
+        const { Places, backBtn, currentUserVechile } = props
+        // console.log(currentUserVechile, 'currentUserVechile..>>');
+
         if (Places && Places.length) {
-            this.setState({ Places: Places, marker: true })
+            this.setState({ Places: Places, marker: true, currentUserVechile })
         }
         if (backBtn === 'Parkering') {
             this.setState({
@@ -115,7 +124,7 @@ class Map extends React.Component {
 
     select(item) {
         const { title } = this.props
-        const { currentLocation } = this.state
+        const { currentLocation, currentUserVechile } = this.state
         const parkLocation = { latitude: item.coordinates.lat, longitude: item.coordinates.long }
         const myLocation = { latitude: currentLocation.lat, longitude: currentLocation.long }
         title('Søgning')
@@ -129,18 +138,50 @@ class Map extends React.Component {
             selectPlace: true,
             suggestion: false,
             selectPlaceConfirm: false,
-            exitParking: false
+            exitParking: false,
+            nextBtn: false,
+            backLoad: false,
+            normal: false,
+            sideLoad: false,
+            parkSpaces: ''
         })
+        console.log(item.parking.normal);
+        var parking = Object.keys(item.parking)
+        var val = parking.indexOf(currentUserVechile.type)
+        if (val === 0 && item.parking.backLoad >= 1) {
+            console.log(item.parking.backLoad, 'backLoad**');
+            this.setState({ nextBtn: true, backLoad: true, parkSpaces: item.parking.backLoad })
+        } else if (val === 1 && item.parking.normal >= 1) {
+            console.log(item.parking.normal, 'normal**');
+            this.setState({ nextBtn: true, normal: true, parkSpaces: item.parking.normal })
+        } else if (val === 2 && item.parking.sideLoad >= 1) {
+            console.log(item.parking.sideLoad, 'sideLoad**');
+            this.setState({ nextBtn: true, sideLoad: true, parkSpaces: item.parking.sideLoad })
+        }
+
     }
     place() {
         const { title } = this.props
-        this.setState({
-            selectPlaceConfirm: true,
-            selectPlace: false,
-            searchInput: false,
-            suggestion: false
-        })
-        title('Parkering')
+        const { nextBtn, item, backLoad, normal, sideLoad, parkSpaces } = this.state
+        var parkUserUID = item.userUid
+        if (nextBtn) {
+            if (backLoad) {
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: parkSpaces - 1 })
+            } else if (normal) {
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: parkSpaces - 1 })
+            } else if (sideLoad) {
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: parkSpaces - 1 })
+            }
+            this.setState({
+                selectPlaceConfirm: true,
+                selectPlace: false,
+                searchInput: false,
+                suggestion: false
+            })
+            title('Parkering')
+        } else {
+            this.setState({ alert: true })
+        }
     }
 
     closeDetail() {
@@ -160,7 +201,7 @@ class Map extends React.Component {
 
     render() {
         const {
-            currentLocation, get, selectPlace,  search, item, exitParking,
+            currentLocation, get, selectPlace, search, item, exitParking, nextBtn, alert,
             searchInput, suggestion, selectPlaceConfirm, Places, marker, distanceKm
         } = this.state
 
@@ -228,13 +269,13 @@ class Map extends React.Component {
                                     />
                                 </View>
                             }
-                            <View style={styles.dropDown}>
+                            <ScrollView style={styles.dropDown}>
                                 {    // search DropDown
                                     suggestion && marker &&
                                     Places.map((item, index) => {
-                                        console.log(item, '****Places****');
+                                        // console.log(item, '****Places****');
                                         return (
-                                            <ScrollView key={index} style={styles.view} scrollEnabled={false}>
+                                            <View key={index} style={styles.view}>
                                                 <View style={styles.border}></View>
                                                 <TouchableOpacity
                                                     style={{ paddingTop: 15, paddingBottom: 15, }}
@@ -248,11 +289,11 @@ class Map extends React.Component {
                                                         <Text style={{ paddingRight: 6 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
                                                     </View>
                                                 </TouchableOpacity>
-                                            </ScrollView>
+                                            </View>
                                         )
                                     })
                                 }
-                            </View>
+                            </ScrollView>
                         </View>
 
                         {   // place detail view with sogning header
@@ -370,6 +411,18 @@ class Map extends React.Component {
                                 </View>
                             }
                         </View>
+                        <Snackbar
+                            visible={alert}
+                            onDismiss={() => this.setState({ alert: false })}
+                            action={{
+                                label: 'Ok',
+                                onPress: () => {
+                                    // Do something
+                                },
+                            }}
+                        >
+                            Don't enough space
+                        </Snackbar>
                     </View>
                     :
                     <View style={{ flex: 1, backgroundColor: '#f2f6f9', alignItems: 'center' }}>
@@ -466,7 +519,7 @@ function mapStateToProps(states) {
     return ({
         UID: states.authReducers.UID,
         Places: states.authReducers.PLACES,
-        alluser: states.authReducers.ALLUSER,
+        currentUserVechile: states.authReducers.VEHICLE,
 
     })
 }
