@@ -288,7 +288,7 @@ class Map extends React.Component {
 
                         </MapView >
 
-                        <View style={{ alignItems: 'center', marginTop: 14, position: 'absolute' }}>
+                        <View style={styles.shadow}>
                             {searchInput &&
                                 <View style={styles.container}>
                                     <Icon name='search' size={30} color='#0291d3' style={styles.searchIcon} />
@@ -474,7 +474,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'white',
         borderRadius: 4,
-        width: '95%'
+        width: '95%',
+        shadowOffset: {
+            width: 3,
+            height: 3,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 4.16,
+        elevation: 5,
+        shadowColor: 'grey',
     },
     map: {
         ...StyleSheet.absoluteFillObject,
@@ -482,7 +490,15 @@ const styles = StyleSheet.create({
     dropDown: {
         maxHeight: 200,
         backgroundColor: 'white',
-        width: '95%'
+        width: '95%',
+        shadowOffset: {
+            width: 3,
+            height: 3,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 4.16,
+        elevation: 5,
+        shadowColor: 'grey',
     },
     input: {
         color: 'black',
@@ -512,6 +528,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
+    shadow: {
+
+        // borderWidth: 1,
+        alignItems: 'center',
+        marginTop: 14,
+        position: 'absolute'
+    },
     bottomView: {
         alignItems: 'center',
         bottom: 26,
@@ -522,7 +545,15 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         borderRadius: 4,
-        width: '100%'
+        width: '100%',
+        shadowOffset: {
+            width: 3,
+            height: 3,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 4.16,
+        elevation: 5,
+        shadowColor: 'grey',
     },
     closeBtn: {
         flex: 1,
