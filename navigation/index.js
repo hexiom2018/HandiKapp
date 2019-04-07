@@ -6,6 +6,7 @@ import Parking from '../src/screens/parking/Parking';
 import SignUp from '../src/screens/signUp/SignUp';
 import Profile from '../src/screens/profile/Profile';
 import AddParking from '../src/screens/addParking/AddParking';
+import ForgetPassword from '../src/screens/forgetPassword/ForgetPassword';
 import About from '../src/screens/about/About'
 
 const StackNavigator = createStackNavigator({
@@ -27,6 +28,9 @@ const StackNavigator = createStackNavigator({
     },
     Parking: {
         screen: Parking
+    },
+    ForgetPassword: {
+        screen: ForgetPassword
     },
     About:{
         screen:About

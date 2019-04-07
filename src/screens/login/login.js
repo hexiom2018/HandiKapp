@@ -46,7 +46,7 @@ class LogIn extends React.Component {
         })
     }
     function = () => {
-        this.props.navigation.navigate('SignUp')
+        this.props.navigation.navigate('ForgetPassword')
     }
     Login() {
         const { email, password, } = this.state
