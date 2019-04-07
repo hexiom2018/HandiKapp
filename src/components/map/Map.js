@@ -166,11 +166,14 @@ class Map extends React.Component {
         var parkUserUID = item.userUid
         if (nextBtn) {
             if (backLoad) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: parkSpaces - 1 })
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (parkSpaces - 1).toString() })
+                this.setState({ parkSpaces: parkSpaces - 1 })
             } else if (normal) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: parkSpaces - 1 })
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (parkSpaces - 1).toString() })
+                this.setState({ parkSpaces: parkSpaces - 1 })
             } else if (sideLoad) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: parkSpaces - 1 })
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (parkSpaces - 1).toString() })
+                this.setState({ parkSpaces: parkSpaces - 1 })
             }
             this.setState({
                 selectPlaceConfirm: true,
@@ -197,6 +200,18 @@ class Map extends React.Component {
             searchInput: false,
             selectPlaceConfirm: false
         })
+    }
+
+    exitParking() {
+        const { nextBtn, item, backLoad, normal, sideLoad, parkSpaces } = this.state
+        var parkUserUID = item.userUid
+        if (backLoad) {
+            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (+parkSpaces + 1).toString() })
+        } else if (normal) {
+            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (+parkSpaces + 1).toString() })
+        } else if (sideLoad) {
+            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (+parkSpaces + 1).toString() })
+        }
     }
 
     render() {
@@ -394,6 +409,7 @@ class Map extends React.Component {
                                         </View>
                                         <TouchableOpacity
                                             style={styles.bottomViewBtn}
+                                            onPress={() => this.exitParking()}
                                         >
                                             <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
                                                 <View >
