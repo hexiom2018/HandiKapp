@@ -5,6 +5,7 @@ import { Marker } from 'react-native-maps';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Constants, Location, Permissions, Expo } from 'expo';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import geolib from 'geolib'
 import imgHandi from '../../../assets/splash-screen/handi.png';
 import navigationIcon from '../../../assets/navigationIcon.png';
 import flagIcon from '../../../assets/flagIcon.png';
@@ -22,8 +23,7 @@ class Map extends React.Component {
     constructor() {
         super()
         this.state = {
-            currentLocation: { lat: null, lng: null },
-            userLocation: { lat: null, lng: null },
+            currentLocation: { lat: null, long: null },
             get: false,
             sellerLocation: false,
             search: '',
@@ -74,7 +74,7 @@ class Map extends React.Component {
         var that = this
         address.then(function (value) {
             let array = value.map(val => {
-                console.log('currentLocation==>', val);
+                // console.log('currentLocation==>', val);
                 var obj = {
                     address: {
                         country: val.country,
@@ -92,10 +92,18 @@ class Map extends React.Component {
             })
         })
         this.setState({
-            currentLocation: { lat: location.coords.latitude, lng: location.coords.longitude },
+            currentLocation: { lat: location.coords.latitude, long: location.coords.longitude },
             get: true,
         });
     };
+
+    getDistance = async (ParkingLocation, currentLocation) => {
+        const direction = await geolib.getDistanceSimple(
+            ParkingLocation,
+            currentLocation,
+        )
+        return direction
+    }
 
     markerSelect(item) {
         this.setState({
@@ -107,7 +115,15 @@ class Map extends React.Component {
 
     select(item) {
         const { title } = this.props
+        const { currentLocation } = this.state
+        const parkLocation = { latitude: item.coordinates.lat, longitude: item.coordinates.long }
+        const myLocation = { latitude: currentLocation.lat, longitude: currentLocation.long }
         title('Søgning')
+        this.getDistance(myLocation, parkLocation).then((res) => {
+            let km = res / 1000
+            let distanceKm = km.toFixed(1)
+            this.setState({ distanceKm })
+        })
         this.setState({
             item,
             selectPlace: true,
@@ -134,34 +150,20 @@ class Map extends React.Component {
     }
 
     confirm() {
-        const { title } = this.props
         this.setState({
             exitParking: true,
             selectPlace: false,
             searchInput: false,
+            selectPlaceConfirm: false
         })
-        // title('Parkering')
     }
 
     render() {
         const {
-            currentLocation, get, selectPlace, userLocation, search, item, exitParking,
-            searchInput, suggestion, selectPlaceConfirm, Places, marker
+            currentLocation, get, selectPlace,  search, item, exitParking,
+            searchInput, suggestion, selectPlaceConfirm, Places, marker, distanceKm
         } = this.state
 
-        const coordinates = [
-            {
-                latitude: currentLocation.lat,
-                longitude: currentLocation.lng,
-            },
-            {
-                latitude: userLocation.lat,
-                longitude: userLocation.lng,
-            },
-        ]
-
-        const arr = [{ name: 'talha' }, { name: 'nabeel' }, { name: 'uzair' }]
-        // const GOOGLE_MAPS_APIKEY = ''
         return (
             <View style={{ flex: 1 }}>
                 {get ?
@@ -171,7 +173,7 @@ class Map extends React.Component {
                             style={styles.map}
                             region={{
                                 latitude: currentLocation.lat,
-                                longitude: currentLocation.lng,
+                                longitude: currentLocation.long,
                                 latitudeDelta: LATITUDE_DELTA,
                                 longitudeDelta: LONGITUDE_DELTA,
                             }}
@@ -201,7 +203,7 @@ class Map extends React.Component {
                                     <MapView.Marker
                                         coordinate={{
                                             latitude: currentLocation.lat,
-                                            longitude: currentLocation.lng,
+                                            longitude: currentLocation.long,
                                         }}
                                     >
                                         <Image
@@ -211,16 +213,8 @@ class Map extends React.Component {
                                     </MapView.Marker>
                             }
 
-
-                            {/* <MapViewDirections
-                            origin={coordinates[0]}
-                            destination={coordinates[coordinates.length - 1]}
-                            apikey={GOOGLE_MAPS_APIKEY}
-                            strokeWidth={3}
-                            strokeColor="hotpink"
-                        />  */}
-
                         </MapView >
+
                         <View style={{ alignItems: 'center', marginTop: 14, position: 'absolute' }}>
                             {searchInput &&
                                 <View style={styles.container}>
@@ -234,30 +228,31 @@ class Map extends React.Component {
                                     />
                                 </View>
                             }
-
-                            {    // search DropDown
-                                suggestion && marker &&
-                                Places.map((item, index) => {
-                                    // console.log(item, '****Places****');
-                                    return (
-                                        <ScrollView key={index} style={styles.view} scrollEnabled={false}>
-                                            <View style={styles.border}></View>
-                                            <TouchableOpacity
-                                                style={{ paddingTop: 15, paddingBottom: 15, }}
-                                                onPress={() => this.select(item)}
-                                            >
-                                                <View style={styles.searchListItem}>
-                                                    <View>
-                                                        <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)' }} >{item.address.streetName}</Text>
-                                                        <Text style={{ fontSize: 10, color: '#0291d3' }} >{`${item.address.zipCode}, ${item.address.streetName} ${item.address.streetNr}, ${item.address.city}`}</Text>
+                            <View style={styles.dropDown}>
+                                {    // search DropDown
+                                    suggestion && marker &&
+                                    Places.map((item, index) => {
+                                        console.log(item, '****Places****');
+                                        return (
+                                            <ScrollView key={index} style={styles.view} scrollEnabled={false}>
+                                                <View style={styles.border}></View>
+                                                <TouchableOpacity
+                                                    style={{ paddingTop: 15, paddingBottom: 15, }}
+                                                    onPress={() => this.select(item)}
+                                                >
+                                                    <View style={styles.searchListItem}>
+                                                        <View>
+                                                            <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)', width: 270 }} >{item.address.streetName}</Text>
+                                                            <Text style={{ fontSize: 10, color: '#0291d3', width: 270 }} >{`${item.address.zipCode === undefined ? '' : item.address.zipCode} ${item.address.streetName}, ${item.address.city}`}</Text>
+                                                        </View>
+                                                        <Text style={{ paddingRight: 6 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
                                                     </View>
-                                                    <Text style={{ paddingRight: 8 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        </ScrollView>
-                                    )
-                                })
-                            }
+                                                </TouchableOpacity>
+                                            </ScrollView>
+                                        )
+                                    })
+                                }
+                            </View>
                         </View>
 
                         {   // place detail view with sogning header
@@ -269,8 +264,8 @@ class Map extends React.Component {
                                     </View>
                                     <View style={{ marginBottom: 14, marginLeft: 20 }}>
                                         <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{'Valgt Iokalitet:'}</Text>
-                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, }}>{`${item.address.streetName} ${item.address.streetNr}, ${item.address.zipCode} ${item.address.city}`}</Text>
-                                        <Text style={{ color: 'gray', paddingLeft: 16, fontSize: 12, }}>time dikhan hai</Text>
+                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, width: 275 }}>{`${item.address.streetName}, ${item.address.zipCode === undefined ? '' : item.address.zipCode} ${item.address.city}`}</Text>
+                                        <Text style={{ color: 'gray', paddingLeft: 16, fontSize: 12, }}>{`${distanceKm} km, til destination`}</Text>
                                     </View>
                                     <TouchableOpacity
                                         onPress={() => this.place()}
@@ -301,7 +296,7 @@ class Map extends React.Component {
                                     </View>
                                     <View style={{ marginBottom: 14, marginLeft: 20 }}>
                                         <Text style={{ color: 'black', paddingLeft: 16, fontSize: 16, }}>{'PARKPARK A/S:'}</Text>
-                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, }}>{`${item.address.streetName} ${item.address.streetNr}, ${item.address.zipCode} ${item.address.city}`}</Text>
+                                        <Text style={{ color: '#0291d3', paddingLeft: 16, fontSize: 18, width: 275 }}>{`${item.address.streetName}, ${item.address.zipCode === undefined ? '' : item.address.zipCode} ${item.address.city}`}</Text>
                                     </View>
                                     <TouchableOpacity
                                         onPress={() => this.confirm()}
@@ -322,58 +317,59 @@ class Map extends React.Component {
                                 </View>
                             </View>
                         }
-
-                        { // Exit Parking View
-                            exitParking &&
-                            <View style={styles.bottomView}>
-                                <View style={styles.bottomDiv}>
-                                    <View style={styles.closeBtn}>
-                                        <Text onPress={() => this.setState({ exitParking: false, selectPlaceConfirm: true })}><Icon name='close' size={30} color='gray' /></Text>
+                        <View style={styles.bottomView}>
+                            { // Exit Parking View
+                                exitParking &&
+                                <View style={{ width: '100%' }}>
+                                    <View style={styles.bottomDiv}>
+                                        <View style={styles.closeBtn}>
+                                            <Text onPress={() => this.setState({ exitParking: false, selectPlaceConfirm: true })}><Icon name='close' size={30} color='gray' /></Text>
+                                        </View>
+                                        <View style={{ marginBottom: 16, marginLeft: 20 }}>
+                                            <View style={{ marginLeft: 10, flexDirection: "row", marginBottom: 10 }}>
+                                                <View style={{ marginTop: 4 }}>
+                                                    <Image
+                                                        source={flagIcon}
+                                                        style={{ width: 20, height: 20 }}
+                                                    />
+                                                </View>
+                                                <View>
+                                                    <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>{'Destination  Nået'}</Text>
+                                                    <Text style={{ color: 'gray', paddingLeft: 10, fontSize: 18, width: 260 }}>{`${item.address.streetName}, ${item.address.zipCode === undefined ? '' : item.address.zipCode} ${item.address.city}`}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={{ marginLeft: 20, flexDirection: "row" }}>
+                                                <View style={{ marginTop: 2 }}>
+                                                    <Image
+                                                        source={minusIcon}
+                                                        style={{ width: 20, height: 20 }}
+                                                    />
+                                                </View>
+                                                <View>
+                                                    <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>{'Er pladsen optaget?'}</Text>
+                                                    <Text style={{ color: '#0291d3', paddingLeft: 10, fontSize: 18, textDecorationLine: 'underline' }}>Vis Nærmeste plads ></Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                        <TouchableOpacity
+                                            style={styles.bottomViewBtn}
+                                        >
+                                            <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
+                                                <View >
+                                                    <Image
+                                                        source={checkIcon}
+                                                        style={{ width: 30, height: 30 }}
+                                                    />
+                                                </View>
+                                                <View >
+                                                    <Text style={styles.btnText} > {'  Afslut Parkering'}</Text>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
                                     </View>
-                                    <View style={{ marginBottom: 16, marginLeft: 20 }}>
-                                        <View style={{ marginLeft: 10, flexDirection: "row", marginBottom: 10 }}>
-                                            <View style={{ marginTop: 4 }}>
-                                                <Image
-                                                    source={flagIcon}
-                                                    style={{ width: 20, height: 20 }}
-                                                />
-                                            </View>
-                                            <View>
-                                                <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>{'Destination  Nået'}</Text>
-                                                <Text style={{ color: 'gray', paddingLeft: 10, fontSize: 18, }}>{`${item.address.streetName} ${item.address.streetNr}, ${item.address.zipCode} ${item.address.city}`}</Text>
-                                            </View>
-                                        </View>
-                                        <View style={{ marginLeft: 10, flexDirection: "row" }}>
-                                            <View style={{ marginTop: 2 }}>
-                                                <Image
-                                                    source={minusIcon}
-                                                    style={{ width: 20, height: 20 }}
-                                                />
-                                            </View>
-                                            <View>
-                                                <Text style={{ color: 'black', paddingLeft: 10, fontSize: 18, }}>{'Er pladsen optaget?'}</Text>
-                                                <Text style={{ color: '#0291d3', paddingLeft: 10, fontSize: 18, textDecorationLine: 'underline' }}>Square 12258 sq</Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <TouchableOpacity
-                                        style={styles.bottomViewBtn}
-                                    >
-                                        <View style={{ marginHorizontal: 40, flexDirection: 'row' }}>
-                                            <View >
-                                                <Image
-                                                    source={checkIcon}
-                                                    style={{ width: 30, height: 30 }}
-                                                />
-                                            </View>
-                                            <View >
-                                                <Text style={styles.btnText} > {'  Afslut Parkering'}</Text>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
                                 </View>
-                            </View>
-                        }
+                            }
+                        </View>
                     </View>
                     :
                     <View style={{ flex: 1, backgroundColor: '#f2f6f9', alignItems: 'center' }}>
@@ -396,6 +392,10 @@ const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject,
     },
+    dropDown: {
+        backgroundColor: 'white',
+        width: '95%'
+    },
     input: {
         color: 'black',
         height: 70,
@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     },
     view: {
         flex: 1,
-        width: '95%',
+        width: '100%',
         backgroundColor: 'white',
         paddingLeft: 16,
     },
@@ -427,7 +427,8 @@ const styles = StyleSheet.create({
     bottomView: {
         alignItems: 'center',
         bottom: 26,
-        position: 'absolute'
+        position: 'absolute',
+        marginHorizontal: 2,
     },
     bottomDiv: {
         flex: 1,
@@ -443,12 +444,12 @@ const styles = StyleSheet.create({
     },
     bottomViewBtn: {
         flex: 1,
-        width: 280,
+        width: '82%',
         backgroundColor: '#6819e7',
         alignItems: 'center',
         marginBottom: 20,
         marginHorizontal: 30,
-        paddingVertical: 12,
+        paddingVertical: 14,
         borderRadius: 6,
         flexDirection: 'row'
     },
