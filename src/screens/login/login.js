@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     View, ImageBackground, Text, StyleSheet, StatusBar, TouchableOpacity, ScrollView
-    , KeyboardAvoidingView,
+    , KeyboardAvoidingView, ActivityIndicator
 } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Splashh from '../../../assets/splash-screen/splash-image.png'
@@ -17,6 +17,7 @@ class LogIn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             fields: [
                 {
                     label: 'E-mail',
@@ -54,8 +55,10 @@ class LogIn extends React.Component {
     }
     Login() {
         const { email, password, } = this.state
-
         if (email && password) {
+            this.setState({
+                loading: true
+            })
             const { Action } = this.props.actions
 
             Action(email, password).then(() => {
@@ -73,7 +76,8 @@ class LogIn extends React.Component {
             }).catch(() => {
                 this.setState({
                     alert: true,
-                    text: 'Forkert kodeord'
+                    text: 'Forkert kodeord',
+                    loading: false
                 })
             })
         } else {
@@ -86,100 +90,105 @@ class LogIn extends React.Component {
 
     static navigationOptions = { header: null }
     render() {
-        const { fields, text } = this.state
+        const { fields, text, loading } = this.state
 
         return (
             <ImageBackground source={Splashh} style={{ width: '100%', height: '100%' }}>
                 <LinearGradient
-                        colors={['#83E2DA', '#7ACED2', '#0199B0', '#0093d0']}
-                        style={{ flex: 1 }}
-                        opacity={0.8}
+                    colors={['#83E2DA', '#7ACED2', '#0199B0', '#0093d0']}
+                    style={{ flex: 1 }}
+                    opacity={0.8}
 
-                    >
-                <KeyboardAvoidingView style={{ flex: 1 }}  behavior={'padding'} enabled>
-                    <ScrollView style={{ flex: 1 }}>
+                >
+                    <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'} enabled>
+                        <ScrollView style={{ flex: 1 }}>
 
-                        <View style={{ flex: 1 }}>
-                            <StatusBar hidden={true} />
-                            <View style={styles.Heading}><Text style={styles.headingText} onPress={() => this.logIn()}>Log ind</Text></View>
-                            <View style={styles.body}>
-                                <View style={styles.form}>
-                                    {
-                                        fields &&
-                                        fields.map((items, index) => {
-                                            return (
-                                                <InputField
-                                                    key={index}
-                                                    label={items.label}
-                                                    name={items.name}
-                                                    type={items.type}
-                                                    PlaceholderColor={'black'}
-                                                    secure={items.secure}
-                                                    TextColor={'white'}
-                                                    fontAwesome={items.fontAwesome}
-                                                    placeholder={items.placeholder}
-                                                    change={(value) => this.onChange(value, items.value)}
-                                                    InputBackgroundColor={'white'}
-                                                    iconColor={'white'}
-                                                />
-                                            )
-                                        })
-                                    }
+                            <View style={{ flex: 1 }}>
+                                <StatusBar hidden={true} />
+                                <View style={styles.Heading}><Text style={styles.headingText} onPress={() => this.logIn()}>Log ind</Text></View>
+                                {loading ? <View style={{ flex: 1, justifyContent: 'center',alignItems:"center" }}>
+                                    <ActivityIndicator size="large" color="#ffffff" />
+                                </View>:
+                                <View style={styles.body}>
+                                    <View style={styles.form}>
+                                        {
+                                            fields &&
+                                            fields.map((items, index) => {
+                                                return (
+                                                    <InputField
+                                                        key={index}
+                                                        label={items.label}
+                                                        name={items.name}
+                                                        type={items.type}
+                                                        PlaceholderColor={'black'}
+                                                        secure={items.secure}
+                                                        TextColor={'white'}
+                                                        fontAwesome={items.fontAwesome}
+                                                        placeholder={items.placeholder}
+                                                        change={(value) => this.onChange(value, items.value)}
+                                                        InputBackgroundColor={'white'}
+                                                        iconColor={'white'}
+                                                    />
+                                                )
+                                            })
+                                        }
+                                    </View>
+                                    <View style={styles.button}>
+                                        <Button
+                                            color={true}
+                                            border={true}
+                                            name={'Log ind'}
+                                            background={true}
+                                            buttonAction={() => this.Login()}
+                                            textColor={'white'}
+                                        />
+                                    </View>
+
+                                    <View>
+                                        <TouchableOpacity
+                                            onPress={this.function}
+                                            activeOpacity={0.7}
+                                            style={[styles.button,
+                                            ]}>
+                                            <View style={{ alignItems: 'flex-end', paddingHorizontal: 3, }}>
+                                                <Text style={{ fontSize: 15, color: 'white', borderBottomColor: 'white', borderBottomWidth: 1 }
+                                                }>
+                                                    {'Glemt dit password?'}
+                                                </Text>
+                                            </View>
+
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={this.function2}
+                                            activeOpacity={0.7}
+                                            style={[styles.button,
+                                            ]}>
+                                            <View style={{ alignItems: 'flex-end', paddingHorizontal: 3 }}>
+                                                <Text style={{ fontSize: 16, color: 'white', fontWeight: '500' }}>
+                                                    {'+Opret ny bruger her'}
+                                                </Text>
+                                            </View>
+
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                                <View style={styles.button}>
-                                    <Button
-                                        color={true}
-                                        border={true}
-                                        name={'Log ind'}
-                                        background={true}
-                                        buttonAction={() => this.Login()}
-                                        textColor={'white'}
-                                    />
-                                </View>
+                                }
 
-                                <View>
-                                    <TouchableOpacity
-                                        onPress={this.function}
-                                        activeOpacity={0.7}
-                                        style={[styles.button,
-                                        ]}>
-                                        <View style={{ alignItems: 'flex-end', paddingHorizontal: 3, }}>
-                                            <Text style={{ fontSize: 15, color: 'white', borderBottomColor: 'white', borderBottomWidth: 1 }
-                                            }>
-                                                {'Glemt dit password?'}
-                                            </Text>
-                                        </View>
-
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={this.function2}
-                                        activeOpacity={0.7}
-                                        style={[styles.button,
-                                        ]}>
-                                        <View style={{ alignItems: 'flex-end', paddingHorizontal: 3 }}>
-                                            <Text style={{ fontSize: 16, color: 'white', fontWeight: '500' }}>
-                                                {'+Opret ny bruger her'}
-                                            </Text>
-                                        </View>
-
-                                    </TouchableOpacity>
-                                </View>
                             </View>
-                        </View>
-                        <Snackbar
-                            visible={this.state.alert}
-                            onDismiss={() => this.setState({ alert: false })}
-                            action={{
-                                label: 'Ok',
-                                onPress: () => {
-                                    // Do something
-                                },
-                            }}
-                        >
-                            {text}
-                        </Snackbar>
-                    </ScrollView>
-                </KeyboardAvoidingView>
+                            <Snackbar
+                                visible={this.state.alert}
+                                onDismiss={() => this.setState({ alert: false })}
+                                action={{
+                                    label: 'Ok',
+                                    onPress: () => {
+                                        // Do something
+                                    },
+                                }}
+                            >
+                                {text}
+                            </Snackbar>
+                        </ScrollView>
+                    </KeyboardAvoidingView>
                 </LinearGradient>
             </ImageBackground>
         );
@@ -213,21 +222,21 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         paddingVertical: 15,
-        opacity:1
+        opacity: 1
     },
     form: {
         // borderWidth: 1,
         width: '100%',
         paddingVertical: 10,
         alignItems: 'center',
-        opacity:1
-        
+        opacity: 1
+
     },
     body: {
         // flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        marginTop:70
+        marginTop: 70
 
     },
 });
