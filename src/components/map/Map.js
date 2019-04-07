@@ -44,7 +44,6 @@ class Map extends React.Component {
     }
 
     componentDidMount() {
-
         if (!Constants.isDevice) {
             this.setState({
                 errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
@@ -55,12 +54,43 @@ class Map extends React.Component {
     }
 
     componentWillReceiveProps(props) {
-        const { Places, backBtn, currentUserVechile } = props
-        // console.log(currentUserVechile, 'currentUserVechile..>>');
+        const { Places, backBtn, currentUserVechile, currentUser } = props
+        console.log(currentUserVechile, 'currentUserVechile..>>');
+        this.setState({ currentUID: currentUser.userUid })
 
         if (Places && Places.length) {
             this.setState({ Places: Places, marker: true, currentUserVechile })
+            Places.map(val => {
+                if (currentUserVechile.parkUserUID === val.userUid) {
+                    console.log(val.parking, '---');
+                    this.setState({
+                        selectPlace: false,
+                        selectPlaceConfirm: false,
+                        exitParking: true,
+                        searchInput: false,
+                        suggestion: false,
+                    })
+                    var parking = Object.keys(val.parking)
+                    var value = parking.indexOf(currentUserVechile.type)
+                    if (value === 0 && val.parking.backLoad >= 1) {
+                        console.log(val.parking.backLoad, 'backLoad**');
+                        this.setState({ backLoad: true, parkSpaces: val.parking.backLoad, item: val })
+                    } else if (value === 1 && val.parking.normal >= 1) {
+                        console.log(val.parking.normal, 'normal**');
+                        this.setState({ normal: true, parkSpaces: val.parking.normal, item: val })
+                    } else if (value === 2 && val.parking.sideLoad >= 1) {
+                        console.log(val.parking.sideLoad, 'sideLoad**');
+                        this.setState({ sideLoad: true, parkSpaces: val.parking.sideLoad, item: val })
+                    }
+                }
+            })
         }
+// console.log(currentUserVechile.parkUserUID);
+
+        // if(currentUserVechile.parkUserUID === undefined){
+        //     this.setState({searchInput: true , exitParking: false , })
+        // }
+
         if (backBtn === 'Parkering') {
             this.setState({
                 selectPlace: false,
@@ -162,19 +192,8 @@ class Map extends React.Component {
     }
     place() {
         const { title } = this.props
-        const { nextBtn, item, backLoad, normal, sideLoad, parkSpaces } = this.state
-        var parkUserUID = item.userUid
+        const { nextBtn, item } = this.state
         if (nextBtn) {
-            if (backLoad) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (parkSpaces - 1).toString() })
-                this.setState({ parkSpaces: parkSpaces - 1 })
-            } else if (normal) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (parkSpaces - 1).toString() })
-                this.setState({ parkSpaces: parkSpaces - 1 })
-            } else if (sideLoad) {
-                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (parkSpaces - 1).toString() })
-                this.setState({ parkSpaces: parkSpaces - 1 })
-            }
             this.setState({
                 selectPlaceConfirm: true,
                 selectPlace: false,
@@ -194,6 +213,33 @@ class Map extends React.Component {
     }
 
     confirm() {
+        const { item, backLoad, normal, sideLoad, parkSpaces, currentUID } = this.state
+        var parkUserUID = item.userUid
+        if (backLoad) {
+            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (parkSpaces - 1).toString() })
+            this.setState({ parkSpaces: parkSpaces - 1 })
+            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+                console.log(snapShot.key, '/*/*/*/');
+                var key = snapShot.key
+                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
+            })
+        } else if (normal) {
+            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (parkSpaces - 1).toString() })
+            this.setState({ parkSpaces: parkSpaces - 1 })
+            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+                console.log(snapShot.key, '/*/*/*/');
+                var key = snapShot.key
+                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
+            })
+        } else if (sideLoad) {
+            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (parkSpaces - 1).toString() })
+            this.setState({ parkSpaces: parkSpaces - 1 })
+            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+                console.log(snapShot.key, '/*/*/*/');
+                var key = snapShot.key
+                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
+            })
+        }
         this.setState({
             exitParking: true,
             selectPlace: false,
@@ -203,12 +249,17 @@ class Map extends React.Component {
     }
 
     exitParking() {
-        const { nextBtn, item, backLoad, normal, sideLoad, parkSpaces } = this.state
+        const { currentUID, item, backLoad, normal, sideLoad, parkSpaces } = this.state
         var parkUserUID = item.userUid
         if (backLoad) {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (+parkSpaces + 1).toString() })
         } else if (normal) {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (+parkSpaces + 1).toString() })
+            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+                console.log(snapShot.key, '/*/*/*/');
+                var key = snapShot.key
+                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: "" })
+            })
         } else if (sideLoad) {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (+parkSpaces + 1).toString() })
         }
@@ -533,7 +584,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(states) {
     return ({
-        UID: states.authReducers.UID,
+        currentUser: states.authReducers.USER,
         Places: states.authReducers.PLACES,
         currentUserVechile: states.authReducers.VEHICLE,
 
