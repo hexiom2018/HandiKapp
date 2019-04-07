@@ -44,12 +44,18 @@ class Map extends React.Component {
     }
 
     componentDidMount() {
+        const { Places, currentUserVechile } = this.props
+
         if (!Constants.isDevice) {
             this.setState({
                 errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
             });
         } else {
             this._getLocationAsync();
+        }
+
+        if (Places && Places.length) {
+            this.setState({ Places: Places, marker: true, currentUserVechile })
         }
     }
 
@@ -192,8 +198,16 @@ class Map extends React.Component {
     }
     place() {
         const { title } = this.props
-        const { nextBtn, item } = this.state
+        const { nextBtn, item, backLoad, normal, sideLoad, parkSpaces } = this.state
+        var parkUserUID = item.userUid
         if (nextBtn) {
+            if (backLoad) {
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: parkSpaces - 1 })
+            } else if (normal) {
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: parkSpaces - 1 })
+            } else if (sideLoad) {
+                firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: parkSpaces - 1 })
+            }
             this.setState({
                 selectPlaceConfirm: true,
                 selectPlace: false,
@@ -248,6 +262,7 @@ class Map extends React.Component {
         })
     }
 
+
     exitParking() {
         const { currentUID, item, backLoad, normal, sideLoad, parkSpaces } = this.state
         var parkUserUID = item.userUid
@@ -262,13 +277,39 @@ class Map extends React.Component {
             })
         } else if (sideLoad) {
             firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (+parkSpaces + 1).toString() })
+
+    search(text) {
+        const { Places } = this.state
+
+        this.setState({ search: text, suggestion: true })
+        var arr = []
+
+        if (Places && Places.length) {
+            Places.map((items, index) => {
+                const streetName = (items.address.streetName).toUpperCase()
+                const city = (items.address.city).toUpperCase()
+                const country = (items.address.country).toUpperCase()
+                const name = (text).toUpperCase()
+                if (streetName.startsWith(name) || city.startsWith(name) || streetName.indexOf(name) !== -1 ||
+                    country.startsWith(name)) {
+                    arr.push(items)
+                    this.setState({ data: arr })
+                } else {
+                    if (arr.indexOf(items) !== -1) {
+                        arr.splice(items, 1)
+                    }
+                    this.setState({ data: arr })
+                }
+
+            })
+
         }
     }
 
     render() {
         const {
             currentLocation, get, selectPlace, search, item, exitParking, nextBtn, alert,
-            searchInput, suggestion, selectPlaceConfirm, Places, marker, distanceKm
+            searchInput, suggestion, selectPlaceConfirm, Places, marker, distanceKm, data
         } = this.state
 
         return (
@@ -322,7 +363,7 @@ class Map extends React.Component {
 
                         </MapView >
 
-                        <View style={{ alignItems: 'center', marginTop: 14, position: 'absolute' }}>
+                        <View style={styles.shadow}>
                             {searchInput &&
                                 <View style={styles.container}>
                                     <Icon name='search' size={30} color='#0291d3' style={styles.searchIcon} />
@@ -331,33 +372,35 @@ class Map extends React.Component {
                                         placeholderTextColor='rgba(13, 13, 13 , 0.7)'
                                         style={styles.input}
                                         placeholder="Søg efter destination..."
-                                        onChangeText={(search) => this.setState({ search, suggestion: true })}
+                                        onChangeText={(search) => this.search(search)}
                                     />
                                 </View>
                             }
                             <ScrollView style={styles.dropDown}>
                                 {    // search DropDown
-                                    suggestion && marker &&
-                                    Places.map((item, index) => {
-                                        // console.log(item, '****Places****');
-                                        return (
-                                            <View key={index} style={styles.view}>
-                                                <View style={styles.border}></View>
-                                                <TouchableOpacity
-                                                    style={{ paddingTop: 15, paddingBottom: 15, }}
-                                                    onPress={() => this.select(item)}
-                                                >
-                                                    <View style={styles.searchListItem}>
-                                                        <View>
-                                                            <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)', width: 270 }} >{item.address.streetName}</Text>
-                                                            <Text style={{ fontSize: 10, color: '#0291d3', width: 270 }} >{`${item.address.zipCode === undefined ? '' : item.address.zipCode} ${item.address.streetName}, ${item.address.city}`}</Text>
+                                    suggestion && marker && search && data ?
+                                        data.map((item, index) => {
+                                            // console.log(item, '****Places****');
+                                            return (
+                                                <View key={index} style={styles.view}>
+                                                    <View style={styles.border}></View>
+                                                    <TouchableOpacity
+                                                        style={{ paddingTop: 15, paddingBottom: 15, }}
+                                                        onPress={() => this.select(item)}
+                                                    >
+                                                        <View style={styles.searchListItem}>
+                                                            <View>
+                                                                <Text style={{ fontSize: 18, color: 'rgba(13, 13, 13 , 0.8)', width: 270 }} >{item.address.streetName}</Text>
+                                                                <Text style={{ fontSize: 10, color: '#0291d3', width: 270 }} >{`${item.address.zipCode === undefined ? '' : item.address.zipCode} ${item.address.streetName}, ${item.address.city}`}</Text>
+                                                            </View>
+                                                            <Text style={{ paddingRight: 6 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
                                                         </View>
-                                                        <Text style={{ paddingRight: 6 }} ><Icon name='chevron-right' size={36} color='#0291d3' /></Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            </View>
-                                        )
-                                    })
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        })
+                                        :
+                                        null
                                 }
                             </ScrollView>
                         </View>
@@ -507,14 +550,31 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'white',
         borderRadius: 4,
-        width: '95%'
+        width: '95%',
+        shadowOffset: {
+            width: 3,
+            height: 3,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 4.16,
+        elevation: 5,
+        shadowColor: 'grey',
     },
     map: {
         ...StyleSheet.absoluteFillObject,
     },
     dropDown: {
+        maxHeight: 200,
         backgroundColor: 'white',
-        width: '95%'
+        width: '95%',
+        shadowOffset: {
+            width: 3,
+            height: 3,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 4.16,
+        elevation: 5,
+        shadowColor: 'grey',
     },
     input: {
         color: 'black',
@@ -544,6 +604,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
+    shadow: {
+
+        // borderWidth: 1,
+        alignItems: 'center',
+        marginTop: 14,
+        position: 'absolute'
+    },
     bottomView: {
         alignItems: 'center',
         bottom: 26,
@@ -554,7 +621,15 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         borderRadius: 4,
-        width: '100%'
+        width: '100%',
+        shadowOffset: {
+            width: 3,
+            height: 3,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 4.16,
+        elevation: 5,
+        shadowColor: 'grey',
     },
     closeBtn: {
         flex: 1,
