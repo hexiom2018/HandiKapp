@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import AppHeader from '../../components/header/Header';
 import Map from '../../components/map/Map';
 import { bindActionCreators } from 'redux';
-import { GetParkingSpace } from '../../Store/actions/authAction';
+import { GetParkingSpace, IncreaseParking, DecreaseParking } from '../../Store/actions/authAction';
+import { Snackbar } from 'react-native-paper'
 
 
 
@@ -47,8 +48,46 @@ class Parking extends React.Component {
 
     static navigationOptions = { header: null }
 
+
+    addParking(vehicle, user) {
+        const { IncreaseParking } = this.props.actions
+
+        IncreaseParking(vehicle, user).then(() => {
+            this.setState({
+                navigate: {
+                    exitParking: true,
+                    selectPlace: false,
+                    searchInput: false,
+                    selectPlaceConfirm: false,
+                }
+            })
+        }).catch(() => {
+            this.setState({
+                alert: true,
+                alertText: 'Not Avail Parkering til plads'
+            })
+        })
+    }
+
+    ExitParking(vehicle, user) {
+
+        const { DecreaseParking } = this.props.actions
+
+        DecreaseParking(vehicle, user).then(() => {
+            this.setState({
+                exitParking: {
+                    searchInput: true,
+                    exitParking: false,
+                    item: null,
+                    markers: false,
+                    search: ''
+                }
+            })
+        })
+    }
+
     render() {
-        const { title } = this.state
+        const { title, alert, alertText, navigate, exitParking } = this.state
         return (
             <AppHeader
                 headerTitle={title}
@@ -58,7 +97,23 @@ class Parking extends React.Component {
                 <Map
                     backBtn={title}
                     title={(title) => this.titleHeader(title)}
+                    addParking={(vehicle, userUid) => this.addParking(vehicle, userUid)}
+                    ExitParking={(vehicle, userUid) => this.ExitParking(vehicle, userUid)}
+                    navigate={navigate}
+                    parkExit={exitParking}
                 />
+                <Snackbar
+                    visible={alert}
+                    onDismiss={() => this.setState({ alert: false })}
+                    action={{
+                        label: 'Ok',
+                        onPress: () => {
+                            // Do something
+                        },
+                    }}
+                >
+                    {alertText}
+                </Snackbar>
             </AppHeader>
         )
     }
@@ -73,7 +128,7 @@ function mapStateToProps(states) {
 function mapDispatchToProps(dispatch) {
     return ({
         actions: bindActionCreators({
-            GetParkingSpace
+            GetParkingSpace, IncreaseParking, DecreaseParking
         }, dispatch)
     })
 }

@@ -169,16 +169,71 @@ export function ForgetPasswordAction(email) {
                     resolve()
                     // Email sent.
                     // console.log('success***', success)
-                    
+
                 })
                 .catch((error) => {
                     // An error happened.
                     reject(error)
-                    
+
                 })
         })
     }
 }
+
+
+export function IncreaseParking(vehicle, id) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            db.ref('places/' + id + '/parking/').once('value', (snapShot) => {
+                if (snapShot.val()[vehicle.type] != 0) {
+                    const number = Number(snapShot.val()[vehicle.type]) - 1
+                    db.ref('places/' + id + '/parking/').update({
+                        [vehicle.type]: (number).toString(),
+                    }).then(() => {
+                        db.ref('vehicle/').orderByChild('userUid').equalTo(vehicle.userUid).once('child_added', (snaps) => {
+                            db.ref('vehicle/' + snaps.key + '/').update({
+                                parkUserUID: id
+                            })
+                        })
+                        resolve()
+                    })
+                        .catch((err) => {
+                            console.log(err, 'err')
+                        })
+                } else {
+                    reject()
+                }
+            })
+        })
+    }
+}
+
+
+export function DecreaseParking(vehicle, id) {
+    return dispatch => {
+        return new Promise(function (resolve, reject) {
+            db.ref('places/' + id + '/parking/').once('value', (snapShot) => {
+
+                const number = Number(snapShot.val()[vehicle.type]) + 1
+                db.ref('places/' + id + '/parking/').update({
+                    [vehicle.type]: (number).toString(),
+                }).then(() => {
+                    db.ref('vehicle/').orderByChild('userUid').equalTo(vehicle.userUid).once('child_added', (snaps) => {
+                        db.ref('vehicle/' + snaps.key + '/').update({
+                            parkUserUID: ''
+                        })
+                    })
+                    resolve()
+                })
+                    .catch((err) => {
+                        console.log(err, 'err')
+                    })
+
+            })
+        })
+    }
+}
+
 
 
 //LOgOut
