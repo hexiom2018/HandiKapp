@@ -69,7 +69,7 @@ class Map extends React.Component {
             this.setState({ Places: Places, marker: true, currentUserVechile })
             Places.map(val => {
                 if (currentUserVechile.parkUserUID === val.userUid) {
-                    // console.log(val.parking, '---');
+                    console.log(val.parking, '---');
                     this.setState({
                         selectPlace: false,
                         selectPlaceConfirm: false,
@@ -89,6 +89,8 @@ class Map extends React.Component {
                     // }
                 }
             })
+            console.log(props, ';;;;');
+            
         }
 
         if (backBtn === 'Parkering') {
@@ -158,36 +160,55 @@ class Map extends React.Component {
     }
 
     select(item) {
+
         const { title } = this.props
-        const { currentLocation, currentUserVechile } = this.state
+        const { currentLocation, currentUserVechile, selectPlace } = this.state
         const parkLocation = { latitude: item.coordinates.lat, longitude: item.coordinates.long }
         const myLocation = { latitude: currentLocation.lat, longitude: currentLocation.long }
         title('Søgning')
+        console.log(myLocation , 'myLocation==');
+        
+        // this.setState({
+        //     item,
+        //     selectPlace: true,
+        //     suggestion: false,
+        //     selectPlaceConfirm: false,
+        //     exitParking: false,
+        //     nextBtn: false,
+        //     backLoad: false,
+        //     normal: false,
+        //     sideLoad: false,
+        //     parkSpaces: ''
+        // })
         this.getDistance(myLocation, parkLocation).then((res) => {
             let km = res / 1000
             let distanceKm = km.toFixed(1)
-            this.setState({ distanceKm })
+            this.setState({ 
+                distanceKm ,
+                item,
+                selectPlace: true,
+                suggestion: false,
+                selectPlaceConfirm: false,
+                exitParking: false,
+                nextBtn: false,
+                backLoad: false,
+                normal: false,
+                sideLoad: false,
+                parkSpaces: '',
+                myLocation,
+                parkLocation,
+             })
+            
         })
-        this.setState({
-            item,
-            selectPlace: true,
-            suggestion: false,
-            selectPlaceConfirm: false,
-            exitParking: false,
-            nextBtn: false,
-            backLoad: false,
-            normal: false,
-            sideLoad: false,
-            parkSpaces: ''
-        })
-        
 
     }
     place() {
         const { title } = this.props
         const { nextBtn, item } = this.state
         var parkUserUID = item.userUid
-        // if (nextBtn) {
+        console.log(parkUserUID , '-=-=-');
+        
+        if (item) {
         this.setState({
             selectPlaceConfirm: true,
             selectPlace: false,
@@ -195,7 +216,7 @@ class Map extends React.Component {
             suggestion: false
         })
         title('Parkering')
-        // }
+        }
     }
 
     closeDetail() {
@@ -259,7 +280,7 @@ class Map extends React.Component {
             currentLocation, get, selectPlace, search, item, exitParking, alertText, alert, markers,
             searchInput, suggestion, selectPlaceConfirm, Places, marker, distanceKm, data
         } = this.state
-
+        console.log(this.state.selectPlace, 'selectPlace==');
         return (
             <View style={{ flex: 1 }}>
                 {get ?
