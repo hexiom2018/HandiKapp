@@ -210,39 +210,44 @@ class Map extends React.Component {
     }
 
     confirm() {
-        const { item, backLoad, normal, sideLoad, parkSpaces, currentUID } = this.state
-        var parkUserUID = item.userUid
-        if (backLoad) {
-            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (parkSpaces - 1).toString() })
-            this.setState({ parkSpaces: parkSpaces - 1 })
-            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
-                // console.log(snapShot.key, '/*/*/*/');
-                var key = snapShot.key
-                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
-            })
-        } else if (normal) {
-            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (parkSpaces - 1).toString() })
-            this.setState({ parkSpaces: parkSpaces - 1 })
-            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
-                // console.log(snapShot.key, '/*/*/*/');
-                var key = snapShot.key
-                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
-            })
-        } else if (sideLoad) {
-            firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (parkSpaces - 1).toString() })
-            this.setState({ parkSpaces: parkSpaces - 1 })
-            firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
-                // console.log(snapShot.key, '/*/*/*/');
-                var key = snapShot.key
-                firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
-            })
-        }
-        this.setState({
-            exitParking: true,
-            selectPlace: false,
-            searchInput: false,
-            selectPlaceConfirm: false
-        })
+        const { currentUser } = this.state
+        // var parkUserUID = item.userUid
+
+        console.log(currentUser, 'current user')
+
+
+
+        // if (backLoad) {
+        //     firebase.database().ref('places/' + parkUserUID + '/parking/').update({ backLoad: (parkSpaces - 1).toString() })
+        //     this.setState({ parkSpaces: parkSpaces - 1 })
+        //     firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+        //         // console.log(snapShot.key, '/*/*/*/');
+        //         var key = snapShot.key
+        //         firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
+        //     })
+        // } else if (normal) {
+        //     firebase.database().ref('places/' + parkUserUID + '/parking/').update({ normal: (parkSpaces - 1).toString() })
+        //     this.setState({ parkSpaces: parkSpaces - 1 })
+        //     firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+        //         // console.log(snapShot.key, '/*/*/*/');
+        //         var key = snapShot.key
+        //         firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
+        //     })
+        // } else if (sideLoad) {
+        //     firebase.database().ref('places/' + parkUserUID + '/parking/').update({ sideLoad: (parkSpaces - 1).toString() })
+        //     this.setState({ parkSpaces: parkSpaces - 1 })
+        //     firebase.database().ref('/vehicle/').orderByChild('userUid').equalTo(currentUID).once('child_added', snapShot => {
+        //         // console.log(snapShot.key, '/*/*/*/');
+        //         var key = snapShot.key
+        //         firebase.database().ref('/vehicle/' + key + '/').update({ parkUserUID: parkUserUID })
+        //     })
+        // }
+        // this.setState({
+        //     exitParking: true,
+        //     selectPlace: false,
+        //     searchInput: false,
+        //     selectPlaceConfirm: false
+        // })
     }
 
 
