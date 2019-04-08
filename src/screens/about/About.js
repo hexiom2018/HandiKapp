@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, Image, ScrollView, KeyboardAvoidingV
 import { connect } from 'react-redux';
 import { StackActions, NavigationActions } from 'react-navigation';
 import AppHeader from '../../components/header/Header';
-import logoBlack from '../../../assets/logoBlack.png'
+import logoBlack from '../../../assets/handicap_black.png'
 
 
 class About extends React.Component {
@@ -61,7 +61,7 @@ class About extends React.Component {
                                 />
                             </View>
                             <View style={{ width: '90%', marginTop: 20, }}>
-                                <Text style={styles.btns}>søg</Text>
+                                <Text style={styles.btns} onPress={() => this.setState({ text: '' })}>søg</Text>
                             </View>
                             <View style={{ width: '90%', marginTop: 30, }}>
                                 <Text style={{ color: 'gray', fontSize: 16 }}>Arkiver</Text>
